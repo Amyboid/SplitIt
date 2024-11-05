@@ -14,9 +14,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Banana, Clapperboard, HeartPulse, House } from "lucide-react";
+import { ModeToggle } from "@/components/mode-toggle";
 
 export default function ExpenseInput() {
   const profile = ["BB", "mm", "ss"];
+  
   return (
     <div className="grid w-screen h-screen justify-center content-start gap-4 pt-4">
       <TypographyH3>Add Expense</TypographyH3>
@@ -59,7 +61,12 @@ export default function ExpenseInput() {
           </SelectContent>
         </Select>
         <Label htmlFor="amount">Amount</Label>
-        <Input type="number" id="amount" placeholder="Amount" className="no-spinner" />
+        <Input
+          type="number"
+          id="amount"
+          placeholder="Amount"
+          className="no-spinner"
+        />
         <Label htmlFor="message">Purpose</Label>
         <Textarea
           placeholder="Describe what are you spending for"
@@ -69,26 +76,50 @@ export default function ExpenseInput() {
 
       <ToggleGroup
         type="multiple"
-        className="flex-wrap bg-[hsl(240,4.8%,92%)] w-80 p-4 rounded-md"
+        className="flex-col gap-2 bg-[hsl(240,4.8%,92%)] w-80 p-4 rounded-md"
       >
+        <div className="flex justify-between items-center w-full mb-4">
+          <span>Select all</span>
+          <Select>
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="Split Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="default">Default</SelectItem>
+              <SelectItem value="percentage">By percentage</SelectItem>
+              <SelectItem value="fraction">By fraction</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
         {profile.map((item, key) => {
           return (
-            <ToggleGroupItem
-              key={key}
-              value={item}
-              aria-label={item}
-              className="bg-[hsl(var(--ring))] h-16 w-16 px-0.5 py-0 rounded-full "
-            >
-              <Avatar key={key} className="h-14 w-14 rounded-full">
-                <AvatarImage src={"/" + item + ".jpg"} alt={item} />
-                <AvatarFallback>{item}</AvatarFallback>
-              </Avatar>
-            </ToggleGroupItem>
+            <div className="flex items-center justify-start w-full">
+              <ToggleGroupItem
+                key={key}
+                value={item}
+                aria-label={item}
+                className="bg-[hsl(var(--ring))] h-14 w-14 px-0.5 py-0 rounded-full mr-4"
+              >
+                <Avatar key={key} className="h-12 w-12 rounded-full">
+                  <AvatarImage src={"/" + item + ".jpg"} alt={item} />
+                  <AvatarFallback>{item}</AvatarFallback>
+                </Avatar>
+              </ToggleGroupItem>
+              <Label htmlFor="name" className="text-base mr-10">
+                Surajit Maity
+              </Label>
+              <Input
+                type="number"
+                id="name"
+                className="w-16 no-spinner ml-auto"
+                placeholder=""
+              />
+            </div>
           );
         })}
       </ToggleGroup>
-
       <Button>Split Expense</Button>
+      <ModeToggle />
     </div>
   );
 }
