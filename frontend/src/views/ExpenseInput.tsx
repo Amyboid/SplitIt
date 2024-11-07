@@ -36,7 +36,7 @@ export default function ExpenseInput() {
           <SelectContent>
             <SelectItem value="entertainment">
               <span className="flex flex-row items-center font-normal">
-                <Clapperboard size={16} className="mr-2 " />
+                <Clapperboard size={16} className="mr -2 " />
                 Entertainment
               </span>
             </SelectItem>
@@ -73,14 +73,14 @@ export default function ExpenseInput() {
           id="message"
         />
       </div>
-
+      {/* user selection section to select with whom the expense will be splited*/}
       <ToggleGroup
         type="multiple"
         className="flex-col gap-2 bg-[hsl(240,4.8%,92%)] w-80 p-4 rounded-md"
       >
         <div className="flex justify-between items-center w-full mb-4">
           <span>Select all</span>
-          <Select>
+          <Select defaultValue="default">
             <SelectTrigger className="w-[140px]">
               <SelectValue placeholder="Split Type" />
             </SelectTrigger>
