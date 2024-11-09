@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 :root {
   margin: 0;
   padding: 0;
@@ -21,9 +19,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-
 @layer base {
   :root {
+    --delete: 0 84.5% 54.3%;
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -51,6 +49,7 @@
     --radius: 0.5rem;
   }
   .dark {
+    --delete: 0 84.5% 54.3%;
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
