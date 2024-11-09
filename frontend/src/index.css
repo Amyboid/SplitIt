@@ -22,6 +22,14 @@
 }
 
 
+.gradiented-greet-text {
+  background-image: linear-gradient(0deg, #ff7e5f, #feb47b);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -50,6 +58,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -82,10 +91,12 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
+
 @layer components {
   .no-spinner {
     -moz-appearance: textfield;
