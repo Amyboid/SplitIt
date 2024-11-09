@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Textarea } from "@/components/ui/textarea";
-import { MultiSelect } from "@/components/multi-select";
+import {  SearchBox } from "@/components/search-box";
 
 const formSchema = z.object({
   groupname: z.string().min(3, {
@@ -92,7 +92,7 @@ function GroupForm() {
                 <FormItem>
                   {/* <FormLabel>Members</FormLabel> */}
                   <FormControl>
-                    <MultiSelect/>
+                    <SearchBox/>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

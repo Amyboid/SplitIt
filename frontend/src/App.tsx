@@ -1,7 +1,8 @@
 import "./App.css";
-import { ThemeProvider } from "./components/theme-provider"; 
+import { ThemeProvider } from "./components/theme-provider";
 import ExpenseInput from "./views/ExpenseInput";
 import { Link, Route } from "wouter";
+import Groups from "./views/Groups";
 
 function App() {
   const urls = [
@@ -9,6 +10,7 @@ function App() {
     ["AddExpense", "/add/expense"],
     ["history", "/history"],
     ["expense", "/expense"],
+    ["Groups", "/groups"],
   ];
 
   return (
@@ -19,7 +21,8 @@ function App() {
         <Route path="/expense">
           {/* <ExpenseSplit username={localStorage.getItem("payer")} /> */}
         </Route>
-        <Nav links={urls} /> 
+        <Route path="/groups" component={Groups} />
+        <Nav links={urls} />
       </ThemeProvider>
     </>
   );
