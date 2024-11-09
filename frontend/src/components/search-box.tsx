@@ -10,18 +10,23 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "./ui/input";
-import {  useState } from "react";
-import { Search } from "lucide-react"; 
+import { useState } from "react";
+import { Search } from "lucide-react";
 
 interface SearchBarProps {
   handleChange: (value: string) => void;
+  handleAddMember: Function;
+  setOpen: Function;
+  setInputValue: Function;
+  setFilteredUser: Function;
   inputValue: string;
   filteredUser: string[];
 }
 
-export function SearchBox() {
+export function SearchBox({ onAddMember }: any) {
   const [inputValue, setInputValue] = useState("");
   const [filteredUser, setFilteredUser] = useState([]);
+  const [open, setOpen] = useState(false);
 
   function fetchData(value: string) {
     fetch("https://jsonplaceholder.typicode.com/users").then((response) =>
@@ -42,36 +47,76 @@ export function SearchBox() {
     setInputValue(value);
     fetchData(value);
   }
+  function handleCloseAndClear() {
+    setOpen(false);
+    setInputValue("");
+    setFilteredUser([]);
+  }
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Add New</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md [&>button]:hidden">
         <DialogHeader className="text-left">
           <DialogTitle>Add New Member</DialogTitle>
           <DialogDescription>Search by username</DialogDescription>
         </DialogHeader>
         <SearchBar
           handleChange={handleChange}
+          handleAddMember={onAddMember}
           inputValue={inputValue}
           filteredUser={filteredUser}
+          setInputValue={setInputValue}
+          setOpen={setOpen}
+          setFilteredUser={setFilteredUser}
         />
         <DialogFooter className="sm:justify-start">
-          <DialogClose asChild>
-            <Button type="button" variant="secondary">
-              Close
-            </Button>
-          </DialogClose>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={handleCloseAndClear}
+          >
+            Close
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
 
-function SearchBar({ handleChange, inputValue, filteredUser }: SearchBarProps) {
-  const emoji = ["😍","😊","🤺","👾","🤖","👩","😒","😎","🫡","🥸","🤡","💀","👽","👻"]
-  
+function SearchBar({
+  handleChange,
+  inputValue,
+  filteredUser,
+  handleAddMember,
+  setInputValue,
+  setOpen,
+  setFilteredUser,
+}: SearchBarProps) {
+  const emoji = [
+    "😍",
+    "😊",
+    "🤺",
+    "👾",
+    "🤖",
+    "👩",
+    "😒",
+    "😎",
+    "🫡",
+    "🥸",
+    "🤡",
+    "💀",
+    "👽",
+    "👻",
+  ];
+
+  function handleClose(name: string) {
+    setOpen(false);
+    setInputValue("");
+    setFilteredUser([]);
+    handleAddMember(name);
+  }
   return (
     <>
       <div className="rounded-lg border shadow-md max-w-[450px]">
@@ -89,18 +134,20 @@ function SearchBar({ handleChange, inputValue, filteredUser }: SearchBarProps) {
             filteredUser.map((user: any, id) => (
               <div
                 key={id}
-                onClick={() => alert(user.name)}
-                className="flex items-center gap-3 rounded-sm px-4 py-2 text-sm"
+                onClick={() => handleClose(user.name)}
+                className="flex items-center gap-3 cursor-pointer rounded-sm px-4 py-2 text-sm"
               >
                 <div className="w-8 h-8 rounded-full bg-secondary"></div>
                 <div>
-                {user.name}
-                <p className="text-xs text-muted-foreground">Add me {emoji[Math.floor(Math.random()*emoji.length)]} </p>
+                  {user.name}
+                  <p className="text-xs text-muted-foreground">
+                    Add me {emoji[Math.floor(Math.random() * emoji.length)]}{" "}
+                  </p>
                 </div>
               </div>
             ))}
         </div>
-      </div> 
+      </div>
     </>
   );
 }
