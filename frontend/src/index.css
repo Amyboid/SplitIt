@@ -29,6 +29,11 @@
   -webkit-text-fill-color: transparent;
 }
 
+.notification-card-background {
+  background-color: #ffffff;
+  opacity: 0.7;
+  background-image: repeating-radial-gradient(circle at 0 0, transparent 0, #ffffff 13px), repeating-linear-gradient(#e8e8e855, #e8e8e8);
+}
 
 @layer base {
   :root {
