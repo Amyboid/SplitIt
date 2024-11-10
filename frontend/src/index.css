@@ -21,7 +21,6 @@
 
 @layer base {
   :root {
-    --delete: 0 84.5% 54.3%;
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -49,7 +48,6 @@
     --radius: 0.5rem;
   }
   .dark {
-    --delete: 0 84.5% 54.3%;
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
@@ -96,3 +94,8 @@
     -webkit-appearance: none;
   }
 }
+
+
+
+
+/* 0, 84.2%, 60.2%, 0.28 */
