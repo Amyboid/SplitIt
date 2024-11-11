@@ -76,7 +76,7 @@ export default function ExpenseInput() {
       {/* user selection section to select with whom the expense will be splited*/}
       <ToggleGroup
         type="multiple"
-        className="flex-col gap-2 bg-[hsl(240,4.8%,92%)] w-80 p-4 rounded-md"
+        className="flex-col gap-2 bg-secondary w-80 p-4 rounded-md"
       >
         <div className="flex justify-between items-center w-full mb-4">
           <span>Select all</span>

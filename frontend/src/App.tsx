@@ -27,6 +27,7 @@ function App() {
   );
 }
 
+// navigation bar
 function Nav({ links }: any) {
   interface Styles {
     [key: string]:
