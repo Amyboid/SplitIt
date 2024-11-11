@@ -41,6 +41,33 @@ export default function Dashboard() {
                         </CardHeader>
                     </Card>
                 </div>
+                <h1 className="mb-5 text-xl">Quick Actions</h1>
+                <div className="grid grid-cols-4 grid-rows-4 gap-4">
+                    <Button variant="secondary" className="h-auto col-span-1 row-span-1">
+                        <UserPlus />
+                    </Button>
+                    <Button variant="outline" className="h-auto col-span-3 row-span-1">
+                        <Users className="mr-2" /> View Existing Groups
+                    </Button>
+                    <Button variant="outline" className="h-auto col-span-2 row-span-2 flex-wrap">
+                        <CalendarPlus className="mb-[-40px]" />
+                        <div>
+                            Recurring Payments
+                        </div>
+                    </Button>
+                    <Button variant="secondary" className="h-16 col-span-1">
+                        <ChartLine />
+                    </Button>
+                    <Button variant="secondary" className="h-16 col-span-1">
+                        <RefreshCcw />
+                    </Button>
+                    <Button variant="secondary" className="h-16 col-span-2">
+                        Export Data
+                    </Button>
+                    <Button variant="secondary" className="h-16 col-span-4">
+                        <Mic className="mr-2" /> Add Expense With Voice Input
+                    </Button>
+                </div>
             </div>
         </>
     )
