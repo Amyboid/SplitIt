@@ -3,6 +3,7 @@ import { ThemeProvider } from "./components/theme-provider";
 import ExpenseInput from "./views/ExpenseInput";
 import { Link, Route } from "wouter";
 import Groups from "./views/Groups";
+import GroupForm from "./components/group-form";
 
 function App() {
   const urls = [
@@ -22,6 +23,10 @@ function App() {
           {/* <ExpenseSplit username={localStorage.getItem("payer")} /> */}
         </Route>
         <Route path="/groups" component={Groups} />
+        <Route path="/add/group">
+          <GroupForm />
+        </Route>
+
         <Nav links={urls} />
       </ThemeProvider>
     </>
