@@ -5,6 +5,7 @@ import { Link, Route } from "wouter";
 import Groups from "./views/Groups";
 import GroupForm from "./components/group-form";
 
+import { ModeToggle } from "@/components/mode-toggle";
 function App() {
   const urls = [
     // ["home", "/"],
@@ -16,7 +17,7 @@ function App() {
 
   return (
     <>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
         <Route path="/add/expense" component={ExpenseInput} />
         {/* <Route path="/history" component={ExpenseHistoryView} /> */}
         <Route path="/expense">
@@ -26,7 +27,9 @@ function App() {
         <Route path="/add/group">
           <GroupForm />
         </Route>
-
+        <div className="fixed bottom-14 left-4">
+          <ModeToggle />
+        </div>
         <Nav links={urls} />
       </ThemeProvider>
     </>
@@ -34,33 +37,8 @@ function App() {
 }
 
 function Nav({ links }: any) {
-  interface Styles {
-    [key: string]:
-      | string
-      | "absolute"
-      | "relative"
-      | "fixed"
-      | "sticky"
-      | "static"
-      | "inherit";
-  }
-  const styles: Styles = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-evenly",
-    width: "calc(100vw - 3.2rem)",
-    height: "50px",
-    background: "#8a8a8a",
-    position: "fixed",
-    bottom: "2rem",
-    left: "1.6rem",
-    margin: "0",
-    padding: "0",
-    borderRadius: "12px",
-  };
-
   return (
-    <ul style={styles}>
+    <ul className="flex items-center justify-evenly w-full fixed bottom-0 p-4 bg-secondary text-foreground">
       {links.map((e: any, key: any) => (
         <li
           style={{
@@ -68,14 +46,7 @@ function Nav({ links }: any) {
           }}
           key={key}
         >
-          <Link
-            style={{
-              color: "white",
-            }}
-            href={e[1]}
-          >
-            {e[0]}
-          </Link>
+          <Link href={e[1]}>{e[0]}</Link>
         </li>
       ))}
     </ul>
