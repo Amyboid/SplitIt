@@ -11,7 +11,7 @@ function App() {
     ["AddExpense", "/add/expense"],
     ["history", "/history"],
     ["expense", "/expense"],
-    ["auth","/auth/:path"]
+    ["auth","/auth/login"]
   ];
 
   return (
