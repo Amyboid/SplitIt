@@ -41,7 +41,7 @@ export default function Notifications() {
 
     return (
         <>
-            <div className="flex selection:items-center mt-4 mx-4">
+            <div className="flex items-center mt-4 mx-4">
                 <span className="inline mt-[.37rem] mr-auto"><ChevronLeft /></span>
                 <TypographyH3 className="inline -ml-6 mr-auto">
                     Notifications
