@@ -25,7 +25,7 @@ function App() {
         <Route path="/expense">
           {/* <ExpenseSplit username={localStorage.getItem("payer")} /> */}
         </Route>
-        <Nav links={urls} /> 
+        {/* <Nav links={urls} />  */}
       </ThemeProvider>
     </>
   );

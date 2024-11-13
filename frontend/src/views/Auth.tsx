@@ -26,7 +26,7 @@ export default function Auth() {
   
   return (
     <>
-    <main className="w-full h-auto flex items-center justify-center mt-12">
+    <main className="w-full h-auto flex items-center justify-center mt-10">
       <Tabs defaultValue={defualtValue} className="w-[350px]">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="register" onClick={()=>handleTabChange("register")}>Register</TabsTrigger>
@@ -35,10 +35,7 @@ export default function Auth() {
         <TabsContent value="register">
         <Card>
           <CardHeader>
-            <CardTitle>Create Account</CardTitle>
-            <CardDescription>
-              Create your account by giving details and click create account 
-            </CardDescription>
+            <CardTitle>Create Your Account</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             <CustomRegister/>

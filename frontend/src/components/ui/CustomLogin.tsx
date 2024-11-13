@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -41,7 +40,7 @@ export function CustomLogin() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-5">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-3">
         <FormField
           control={form.control}
           name="username"
@@ -68,7 +67,7 @@ export function CustomLogin() {
             </FormItem>
           )}
         />
-        <Button type="submit">Login</Button>
+        <Button type="submit" className="w-full">Login</Button>
       </form>
     </Form>
   )
