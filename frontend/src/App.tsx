@@ -11,7 +11,7 @@ function App() {
     ["AddExpense", "/add/expense"],
     ["history", "/history"],
     ["expense", "/expense"],
-    ["auth","/auth"]
+    ["auth","/auth/:path"]
   ];
 
   return (
@@ -19,7 +19,7 @@ function App() {
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Route path="/add/expense" component={ExpenseInput} />
         <Route path="/" component={Dashboard} />
-        <Route path="/auth" component={Auth} />
+        <Route path="/auth/:path" component={Auth} />
 
         {/* <Route path="/history" component={ExpenseHistoryView} /> */}
         <Route path="/expense">

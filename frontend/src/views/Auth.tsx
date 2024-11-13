@@ -8,18 +8,23 @@ import {
   } from "@/components/ui/card"
 import { CustomRegister } from "@/components/ui/CustomRegister";
 import { CustomLogin } from "@/components/ui/CustomLogin";
+import { useRoute } from "wouter";
+
 
 
 export default function Auth() {
+  const [match,params]= useRoute("/auth/:path")
+  const defualtValue  = match?params?.path:"register"
+  
   return (
     <>
-    <main className="w-full h-screen flex items-center justify-center pb-20">
-      <Tabs defaultValue="Register" className="w-[350px]">
+    <main className="w-full h-screen flex items-center justify-center pb-24">
+      <Tabs defaultValue={defualtValue} className="w-[350px]">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="Register">Register</TabsTrigger>
-          <TabsTrigger value="Login">Login</TabsTrigger>
+          <TabsTrigger value="register">Register</TabsTrigger>
+          <TabsTrigger value="login">Login</TabsTrigger>
         </TabsList>
-        <TabsContent value="Register">
+        <TabsContent value="register">
         <Card>
           <CardHeader>
             <CardTitle>Create Account</CardTitle>
@@ -32,7 +37,7 @@ export default function Auth() {
           </CardContent>
         </Card>
         </TabsContent>
-        <TabsContent value="Login">
+        <TabsContent value="login">
         <Card>
           <CardHeader>
             <CardTitle>Password</CardTitle>
