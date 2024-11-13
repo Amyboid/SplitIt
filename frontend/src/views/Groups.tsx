@@ -1,4 +1,4 @@
-import { Maximize2, Minimize2, Plus, Trash2, Users } from "lucide-react";
+import { ArrowRight, Minimize2, Plus, Trash2, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { isGroupExistAtom, newGroupArrayAtom } from "@/states";
@@ -10,7 +10,7 @@ export default function Groups() {
   useEffect(() => {
     if (newGroupArray.length == 0) {
       setIsGroupExist(false);
-    } 
+    }
   }, [newGroupArray]);
 
   return (
@@ -35,6 +35,34 @@ export default function Groups() {
   );
 }
 
+
+function GroupList() {
+  const [newGroupArray, setNewGroupArray] = useAtom(newGroupArrayAtom);
+  function handleDeleteGroup(index: number) {
+    const newReducedGroup = newGroupArray.filter((_, itemindex) => {
+      return itemindex !== index;
+    });
+    setNewGroupArray(newReducedGroup);
+  }
+  return (
+    <div className="flex flex-col gap-4">
+      <h2 className="text-muted-foreground font-semibold text-base">
+        Hot Groups
+      </h2>
+      <div className="p-0 grid grid-cols-2 gap-4  pt-4">
+        {newGroupArray.map((group, index) => (
+          <GroupCard
+          group={group}
+          deleteIndex={index}
+          deleteGroup={handleDeleteGroup}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+//this is group card component it has delete,expand feature
 interface GroupCardProps {
   group: {
     groupname: string;
@@ -44,8 +72,6 @@ interface GroupCardProps {
   deleteIndex: number;
   deleteGroup: (index: number) => void;
 }
-
-//this is group card component it has delete,expand feature
 function GroupCard({ group, deleteGroup, deleteIndex }: GroupCardProps) {
   const [isFullView, setIsFullView] = useState(false);
   function handleFullView() {
@@ -85,56 +111,32 @@ function GroupCard({ group, deleteGroup, deleteIndex }: GroupCardProps) {
       </div>
     );
   }
+
   return (
     <>
       {isFullView && <GroupCardFullview />}
-      <div className="w-[100%] rounded-2xl border bg-secondary text-div-foreground shadow-sm flex items-center space-x-4 p-4">
-        <div className="flex-1">
-          <h1 className="text-lg font-medium leading-none tracking-tight">
-            {group.groupname}
-          </h1>
-          <div className="flex justify-between mt-6 relative">
-            <div className="flex">
-              <Users className="mr-1 w-4 cursor-pointer" />
-              {group.groupmembers.length}
-            </div>
-            <Maximize2
-              onClick={() => handleFullView()}
-              className="w-4 cursor-pointer"
-            />
-            <Trash2
-              className="absolute right-8 w-5 text-destructive cursor-pointer"
-              onClick={() => deleteGroup(deleteIndex)}
-            />
+      <div className="w-full relative h-24 rounded-xl border bg-secondary text-div-foreground shadow-sm flex flex-col justify-between p-3 pb-2">
+        <h1 className="text-lg font-medium leading-none tracking-tight">
+          {group.groupname}
+        </h1>
+        <div className="flex  justify-between">
+          <div className="flex">
+            <Users className="mr-1 w-4 cursor-pointer" />
+            {group.groupmembers.length}
+          </div>
+          <div
+            onClick={() => handleFullView()}
+            className="flex items-start justify-center gap-1 mt-2"
+          >
+            <p className="text-xs font-semibold block leading-3">view</p>
+            <ArrowRight className="size-3 leading-3 font-bold text-chart-4" />
           </div>
         </div>
+        {/* <Trash2
+            className="absolute right-3 top-3 w-5 text-destructive cursor-pointer"
+            onClick={() => deleteGroup(deleteIndex)}
+          /> */}
       </div>
     </>
-  );
-}
-
-function GroupList() {
-  const [newGroupArray, setNewGroupArray] = useAtom(newGroupArrayAtom);
-  function handleDeleteGroup(index: number) {
-    const newReducedGroup = newGroupArray.filter((_, itemindex) => {
-      return itemindex !== index;
-    });
-    setNewGroupArray(newReducedGroup);
-  }
-  return (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-muted-foreground font-semibold text-base">
-        Hot Groups
-      </h2>
-      <div className="p-0 grid grid-cols-2 gap-4  pt-4">
-        {newGroupArray.map((group, index) => (
-          <GroupCard
-            group={group}
-            deleteIndex={index}
-            deleteGroup={handleDeleteGroup}
-          />
-        ))}
-      </div>
-    </div>
   );
 }
