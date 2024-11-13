@@ -64,9 +64,6 @@ export function CustomLogin() {
               <FormControl>
                 <Input type="password" placeholder="••••••••" {...field} />
               </FormControl>
-              <FormDescription>
-                Enter your password.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

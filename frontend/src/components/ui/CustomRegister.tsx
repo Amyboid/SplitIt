@@ -19,12 +19,12 @@ import { Input } from "@/components/ui/input"
 
 // Define the schema with Zod
 const FormSchema = z.object({
-  firstName: z.string().min(2, {
-    message: "First name must be at least 2 characters.",
-  }),
-  lastName: z.string().min(2, {
-    message: "Last name must be at least 2 characters.",
-  }),
+//   firstName: z.string().min(2, {
+//     message: "First name must be at least 2 characters.",
+//   }),
+//   lastName: z.string().min(2, {
+//     message: "Last name must be at least 2 characters.",
+//   }),
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
@@ -46,8 +46,8 @@ export function CustomRegister() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+    //   firstName: "",
+    //   lastName: "",
       username: "",
       email: "",
       password: "",
@@ -71,7 +71,7 @@ export function CustomRegister() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4">
-        <FormField
+        {/* <FormField
           control={form.control}
           name="firstName"
           render={({ field }) => (
@@ -96,7 +96,7 @@ export function CustomRegister() {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <FormField
           control={form.control}
           name="username"
