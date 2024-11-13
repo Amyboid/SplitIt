@@ -1,5 +1,6 @@
 import "./App.css";
 import { ThemeProvider } from "./components/theme-provider"; 
+import Auth from "./views/Auth";
 import Dashboard from "./views/Dashboard";
 import ExpenseInput from "./views/ExpenseInput";
 import { Link, Route } from "wouter";
@@ -10,6 +11,7 @@ function App() {
     ["AddExpense", "/add/expense"],
     ["history", "/history"],
     ["expense", "/expense"],
+    ["auth","/auth"]
   ];
 
   return (
@@ -17,6 +19,8 @@ function App() {
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <Route path="/add/expense" component={ExpenseInput} />
         <Route path="/" component={Dashboard} />
+        <Route path="/auth" component={Auth} />
+
         {/* <Route path="/history" component={ExpenseHistoryView} /> */}
         <Route path="/expense">
           {/* <ExpenseSplit username={localStorage.getItem("payer")} /> */}
