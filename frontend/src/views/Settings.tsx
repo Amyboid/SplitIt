@@ -1,16 +1,16 @@
 import { ModeToggle } from "@/components/mode-toggle";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { TypographyH3 } from "@/components/ui/typography-h3";
-import { CircleUser, Languages, Scale } from "lucide-react";
+import { ChevronLeft, CircleUser, Languages, Scale } from "lucide-react";
 
 export default function Settings() {
     return (
         <>
-            <div className="flex justify-center mt-4 mx-4">
-                <TypographyH3 className="inline">
+            <div className="flex items-center mt-4 mx-4">
+                <span className="mt-[.37rem] mr-auto"><ChevronLeft /></span>
+                <TypographyH3 className="-ml-6 mr-auto">
                     Settings
                 </TypographyH3>
-                <span className="inline"></span>
             </div>
             <div className="grid gap-4 mt-8 mx-4">
                 <Card>
