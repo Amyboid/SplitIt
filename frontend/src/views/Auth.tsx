@@ -15,8 +15,11 @@ import { useRoute ,useLocation } from "wouter";
 export default function Auth() {
   const [match,params]= useRoute("/auth/:path");
   const [_location,setLocation]  =useLocation();
+  
+  // set the param value with the default value
   const defualtValue  = match?params?.path:"register"
 
+  // route change with tab changing
   const handleTabChange = (path:string) => {
     setLocation(`/auth/${path}`)
   }
