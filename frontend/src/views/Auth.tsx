@@ -15,7 +15,7 @@ import { useRoute ,useLocation } from "wouter";
 export default function Auth() {
   const [match,params]= useRoute("/auth/:path");
   const [_location,setLocation]  =useLocation();
-  
+
   // set the param value with the default value
   const defualtValue  = match?params?.path:"register"
 
@@ -26,7 +26,7 @@ export default function Auth() {
   
   return (
     <>
-    <main className="w-full h-screen flex items-center justify-center pb-24">
+    <main className="w-full h-auto flex items-center justify-center mt-12">
       <Tabs defaultValue={defualtValue} className="w-[350px]">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="register" onClick={()=>handleTabChange("register")}>Register</TabsTrigger>
