@@ -4,7 +4,10 @@ import Auth from "./views/Auth";
 import Dashboard from "./views/Dashboard";
 import ExpenseInput from "./views/ExpenseInput";
 import { Link, Route } from "wouter";
-import { useLogto } from "@logto/react";
+import Home from "./views/Home";
+import Onboarding from "./views/Onboarding";
+
+
 
 function App() {
   const urls = [
@@ -22,6 +25,7 @@ function App() {
       <Route path="/add/expense" component={ExpenseInput} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/auth" component={Auth} />
+      <Route path="/onboarding" component={Onboarding} />
 
       {/* <Route path="/history" component={ExpenseHistoryView} /> */}
       <Route path="/expense">
@@ -84,15 +88,5 @@ function Nav({ links }: any) {
   );
 }
 
-export function Home() {
-  const { signIn, signOut, isAuthenticated } = useLogto();
-  return isAuthenticated ? (
-    <button onClick={() => signOut("http://localhost:5173/")}>Sign Out</button>
-  ) : (
-    <button onClick={() => signIn("http://localhost:5173/auth/")}>Sign In</button>
-
-    
-  );
-}
 
 export default App;
