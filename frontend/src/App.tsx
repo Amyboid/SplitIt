@@ -6,6 +6,7 @@ import Groups from "./views/Groups";
 import GroupForm from "./components/group-form";
 
 import { ModeToggle } from "@/components/mode-toggle";
+import GroupDetails from "./components/group-details";
 function App() {
   const urls = [
     // ["home", "/"],
@@ -24,9 +25,9 @@ function App() {
           {/* <ExpenseSplit username={localStorage.getItem("payer")} /> */}
         </Route>
         <Route path="/groups" component={Groups} />
-        <Route path="/add/group">
-          <GroupForm />
-        </Route>
+        <Route path="/add/group" component={GroupForm} />
+        <Route path="/group/details" component={GroupDetails} />
+
         <div className="fixed bottom-14 left-4">
           <ModeToggle />
         </div>
