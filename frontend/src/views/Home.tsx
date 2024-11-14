@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <>
       <TypographyH3 className="text-white z-30 absolute text-4xl w-full p-4">splitit</TypographyH3>
-      <img src="/d2.jpg" alt="" className="absolute top-0 z-10"/>
+      <img src="/homepage-bg.jpg" alt="" className="absolute top-0 z-10"/>
       <div className="grid place-items-center rounded-t-[3.5rem] bg-white h-36 w-full absolute bottom-0 z-20">
         <Button onClick={() => signIn("http://localhost:5173/auth/")} className="bg-black text-white">
             Get Started
