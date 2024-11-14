@@ -4,6 +4,7 @@ import {
   ChevronLeft,
   History,
   NotebookPen,
+  PackagePlus,
   PiggyBank,
   Settings,
 } from "lucide-react";
@@ -13,30 +14,10 @@ export default function GroupDetails() {
   const groupname = "saas";
   const groupmembers = [
     "Sam Prasad Thakur",
-    "Sam Prasad",
-    "Apu",
-    "Sushant",
-    "Kylie Quinn",
-    "Mia Khalifa",
-    "Jimmy",
-    "Apu",,
-    "Sushant",
-    "Kylie Quinn",
-    "Mia Khalifa",
-    "Jimmy",
-    "Apu",,
-    "Sushant",
-    "Kylie Quinn",
-    "Mia Khalifa",
-    "Jimmy",
-    "Apu",,
-    "Sushant",
-    "Kylie Quinn",
-    "Mia Khalifa",
-    "Jimmy",
-    "Apu",
-    
+    "Sam Prasad"
   ];
+
+
   return (
     <>
       <div className="flex flex-col h-lvh w-lvw">
@@ -51,29 +32,18 @@ export default function GroupDetails() {
             <h2 className="text-muted-foreground font-semibold text-base">
               Options
             </h2>
-            <div className="p-6 grid grid-cols-3 grid-rows-2 items-center justify-center gap-4">
-              <div className="w-full h-16 p-2 flex flex-col gap-1 rounded-lg items-center justify-center bg-secondary">
-                <NotebookPen className="text-chart-3" />
-                <p className="text-xs text-primary">Notes</p>
+            <div className="p-6 grid grid-cols-2 grid-rows-2 items-center justify-center gap-4">
+              <div className="group-option-icons col-span-1">
+                <PackagePlus  className="text-chart-3" />
+                <p className="text-xs text-primary">Add Expense</p>
               </div>
-              <div className="w-full h-16 p-2 flex flex-col gap-1 rounded-lg items-center justify-center bg-secondary">
-                <PiggyBank className="text-chart-3" />
-                <p className="text-xs text-primary">Expenses</p>
-              </div>
-              <div className="w-full h-16 p-2 flex flex-col  gap-2 rounded-lg items-center justify-center bg-secondary">
-                <Activity className="text-chart-3" />
-                <p className="text-xs text-primary">Activity</p>
-              </div>
-              <div className="w-full h-16 p-2 flex flex-col gap-1 rounded-lg items-center justify-center bg-secondary">
-                <ChartNoAxesCombined className="text-chart-3" />
-                <p className="text-xs text-primary">Stats</p>
-              </div>
-              <div className="w-full h-16 p-2 flex flex-col rounded-lg items-center justify-center bg-secondary">
+              <div className="group-option-icons col-span-1">
                 <Settings className="text-chart-3" />
+                <p className="text-xs text-primary">Settings</p>
               </div>
-              <div className="w-full h-16 p-2 flex flex-col gap-1 rounded-lg items-center justify-center bg-secondary">
-                <History className="text-chart-3" />
-                <p className="text-xs text-primary ">History</p>
+              <div className="group-option-icons col-span-2">
+                <PiggyBank className="text-chart-3" />
+                <p className="text-xs text-primary">View Existing Expenses</p>
               </div>
             </div>
           </div>
@@ -82,12 +52,12 @@ export default function GroupDetails() {
               Members
             </h2>
             <div className="rounded-lg border border-chart-3 p-6">
-              <div className="gap-2 flex flex-wrap items-center justify-center">
+              <div className="gap-2 flex flex-col items-center justify-center">
                 {groupmembers.map((_member: any, index) => {
                   return (
                     <div
                       key={index}
-                      className="shadow-sm rounded-lg bg-secondary text-card-foreground text-sm p-2 "
+                      className="shadow-sm w-full text-center rounded-lg bg-secondary text-card-foreground text-sm p-2 "
                     >
                       {groupmembers[index]}
                     </div>
