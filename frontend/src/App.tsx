@@ -6,6 +6,9 @@ import Dashboard from "./views/Dashboard";
 import Notifications from "./views/Notifications";
 import Settings from "./views/Settings";
 import ExpenseInput from "./views/ExpenseInput";
+import Home from "./views/Home";
+
+
 
 function App() {
 
