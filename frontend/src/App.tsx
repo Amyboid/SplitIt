@@ -1,9 +1,10 @@
 import "./App.css";
-import { ThemeProvider } from "./components/theme-provider"; 
+import { ThemeProvider } from "./components/theme-provider";
 import Auth from "./views/Auth";
 import Dashboard from "./views/Dashboard";
 import ExpenseInput from "./views/ExpenseInput";
 import { Link, Route } from "wouter";
+import { useLogto } from "@logto/react";
 
 function App() {
   const urls = [
@@ -11,24 +12,26 @@ function App() {
     ["AddExpense", "/add/expense"],
     ["history", "/history"],
     ["expense", "/expense"],
-    ["auth","/auth/login"]
+    ["auth", "/auth/login"],
   ];
 
   return (
     <>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <Route path="/add/expense" component={ExpenseInput} />
-        <Route path="/" component={Dashboard} />
-        <Route path="/auth/:path" component={Auth} />
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <Route path="/" component={Home}/>
+      <Route path="/add/expense" component={ExpenseInput} />
+      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/auth" component={Auth} />
 
-        {/* <Route path="/history" component={ExpenseHistoryView} /> */}
-        <Route path="/expense">
-          {/* <ExpenseSplit username={localStorage.getItem("payer")} /> */}
-        </Route>
-        {/* <Nav links={urls} />  */}
-      </ThemeProvider>
+      {/* <Route path="/history" component={ExpenseHistoryView} /> */}
+      <Route path="/expense">
+        {/* <ExpenseSplit username={localStorage.getItem("payer")} /> */}
+      </Route>
+      {/* <Nav links={urls} />  */}
+    </ThemeProvider>
     </>
   );
+  
 }
 
 // navigation bar
@@ -78,6 +81,17 @@ function Nav({ links }: any) {
         </li>
       ))}
     </ul>
+  );
+}
+
+export function Home() {
+  const { signIn, signOut, isAuthenticated } = useLogto();
+  return isAuthenticated ? (
+    <button onClick={() => signOut("http://localhost:5173/")}>Sign Out</button>
+  ) : (
+    <button onClick={() => signIn("http://localhost:5173/auth/")}>Sign In</button>
+
+    
   );
 }
 
