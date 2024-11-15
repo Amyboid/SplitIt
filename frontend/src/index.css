@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 :root {
   margin: 0;
   padding: 0;
@@ -113,3 +111,19 @@
     -webkit-appearance: none;
   }
 }
+/* w-full h-16 p-2 flex flex-col gap-1 rounded-lg items-center justify-center bg-secondary */
+
+.group-option-icons{ 
+  height: 4rem;
+  padding: 0.5rem;  
+  display: flex;
+  align-items: center; 
+  justify-content: center;  
+  border-radius: var(--radius);
+  background-color: hsl(var(--secondary));
+
+
+}
+
+
+/* 0, 84.2%, 60.2%, 0.28 */

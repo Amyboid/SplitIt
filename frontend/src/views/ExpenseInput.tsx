@@ -14,13 +14,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Banana, Clapperboard, HeartPulse, House } from "lucide-react";
-import { ModeToggle } from "@/components/mode-toggle";
 
 export default function ExpenseInput() {
   const profile = ["BB", "mm", "ss"];
   
   return (
-    <div className="grid w-screen h-screen justify-center content-start gap-4 pt-4">
+    <div className="grid w-screen justify-center content-start gap-4 pt-4">
       <TypographyH3>Add Expense</TypographyH3>
 
       <div className="grid w-[80vw] gap-4">
@@ -118,8 +117,7 @@ export default function ExpenseInput() {
           );
         })}
       </ToggleGroup>
-      <Button>Split Expense</Button>
-      <ModeToggle />
+      <Button className="mb-20">Split Expense</Button> 
     </div>
   );
 }

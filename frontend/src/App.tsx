@@ -8,9 +8,11 @@ import Dashboard from "./views/Dashboard";
 import Notifications from "./views/Notifications";
 import Settings from "./views/Settings";
 import ExpenseInput from "./views/ExpenseInput";
-
-
-
+import Groups from "./views/Groups";
+import GroupForm from "./components/group-form";
+import GroupDetails from "./components/group-details";
+import GroupSettings from "./views/GroupSettings";
+import Expenses from "./views/Expenses";
 function App() {
   return (
     <>
@@ -22,6 +24,12 @@ function App() {
         <Route path="/notification" component={Notifications} />
         <Route path="/settings" component={Settings} />
         <Route path="/add/expense" component={ExpenseInput} />
+        <Route path="/groups" component={Groups} />
+        <Route path="/add/group" component={GroupForm} />
+        <Route path="/group/details" component={GroupDetails} /> 
+        <Route path="/add/expenses" component={ExpenseInput} />
+        <Route path="/group/settings" component={GroupSettings} />
+        <Route path="/group/expenses" component={Expenses} />
       </ThemeProvider>
     </>
   );
