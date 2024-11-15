@@ -7,6 +7,8 @@ import GroupForm from "./components/group-form";
 
 import { ModeToggle } from "@/components/mode-toggle";
 import GroupDetails from "./components/group-details";
+import GroupSettings from "./views/GroupSettings";
+import Expenses from "./views/Expenses";
 function App() {
   const urls = [
     // ["home", "/"],
@@ -28,6 +30,9 @@ function App() {
         <Route path="/add/group" component={GroupForm} />
         <Route path="/group/details" component={GroupDetails} />
 
+        <Route path="/add/expenses" component={ExpenseInput} />
+        <Route path="/group/settings" component={GroupSettings} />
+        <Route path="/group/expenses" component={Expenses} />
         <div className="fixed bottom-14 left-4">
           <ModeToggle />
         </div>

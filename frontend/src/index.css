@@ -96,12 +96,9 @@
 }
 /* w-full h-16 p-2 flex flex-col gap-1 rounded-lg items-center justify-center bg-secondary */
 
-.group-option-icons{
-  width: 100%;
+.group-option-icons{ 
   height: 4rem;
-  padding: 0.5rem;
-  flex-direction: column;
-  gap: 0.25rem; 
+  padding: 0.5rem;  
   display: flex;
   align-items: center; 
   justify-content: center;  

@@ -33,18 +33,16 @@ export default function GroupDetails() {
               Options
             </h2>
             <div className="p-6 grid grid-cols-2 grid-rows-2 items-center justify-center gap-4">
-              <div className="group-option-icons col-span-1">
-                <PackagePlus  className="text-chart-3" />
-                <p className="text-xs text-primary">Add Expense</p>
-              </div>
-              <div className="group-option-icons col-span-1">
-                <Settings className="text-chart-3" />
-                <p className="text-xs text-primary">Settings</p>
-              </div>
-              <div className="group-option-icons col-span-2">
-                <PiggyBank className="text-chart-3" />
-                <p className="text-xs text-primary">View Existing Expenses</p>
-              </div>
+              <Link className="group-option-icons col-span-1" to="/add/expenses">
+                  <PackagePlus  className="text-chart-3" />
+              </Link>
+              <Link className="group-option-icons col-span-1" to="/group/settings">
+                  <Settings className="text-chart-3" />
+              </Link>
+              <Link className="group-option-icons col-span-2 gap-4" to="/group/expenses">
+                  <PiggyBank className="text-chart-3" />
+                  <p className="text-xs text-primary">View Expenses</p>
+              </Link>
             </div>
           </div>
           <div id="members" className="flex flex-col gap-2 mb-16">
