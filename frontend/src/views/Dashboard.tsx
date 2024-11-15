@@ -1,39 +1,30 @@
-import { TypographyH3 } from "@/components/ui/typography-h3";
-import {
-  Bell,
-  Bolt,
-  CalendarPlus,
-  ChartLine,
-  Mic,
-  RefreshCcw,
-  UserPlus,
-  Users,
-} from "lucide-react";
+import { useEffect } from "react";
+import { useLogto } from "@logto/react";
 import WavingHandSvg from "@/assets/waving_hand_color_default.svg";
-import { useEffect, useState } from "react";
-import { type IdTokenClaims, useLogto } from "@logto/react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { TypographyH3 } from "@/components/ui/typography-h3";
+import { Bell, Bolt, CalendarPlus, ChartLine, Mic, RefreshCcw, UserPlus, Users } from "lucide-react";
+import { useAtom } from "jotai";
+import { userAtom } from "@/lib/user";
+import { Link, useLocation } from "wouter";
 
 export default function Dashboard() {
   const { isAuthenticated, getIdTokenClaims } = useLogto();
-  const [user, setUser] = useState<IdTokenClaims>();
+  const [, setLocation] = useLocation();
+  const [user, setUser] = useAtom(userAtom);
+
   useEffect(() => {
     (async () => {
       if (isAuthenticated) {
         const claims = await getIdTokenClaims();
         setUser(claims);
-        console.log(claims);
       }
     })();
   }, [getIdTokenClaims, isAuthenticated]);
-  //const user = "surajit" // example user
+
+  if (!isAuthenticated) setLocation("/");
+
   return (
     <>
       <div className="flex mt-4 mx-4">
@@ -48,8 +39,12 @@ export default function Dashboard() {
             className="inline w-8 ml-2 mb-1"
           />
         </TypographyH3>
-        <Bell size={20} className="inline ml-auto mr-4 self-center" />
-        <Bolt size={20} className="inline self-center" />
+        <Link to="/notification" className="inline ml-auto mr-4 self-center">
+          <Bell size={20} />
+        </Link>
+        <Link to="/settings" className="inline self-center">
+          <Bolt size={20} />
+        </Link>
       </div>
       <Card className="mt-10 mx-auto w-[90%] overflow-hidden">
         <div className="notification-card-background">
@@ -89,10 +84,7 @@ export default function Dashboard() {
           <Button variant="outline" className="h-auto col-span-3 row-span-1">
             <Users className="mr-2" /> View Existing Groups
           </Button>
-          <Button
-            variant="outline"
-            className="h-auto col-span-2 row-span-2 flex-wrap"
-          >
+          <Button variant="outline" className="h-auto col-span-2 row-span-2 flex-wrap">
             <CalendarPlus className="mb-[-40px]" />
             <div>Recurring Payments</div>
           </Button>
