@@ -2,17 +2,17 @@ import { useHandleSignInCallback, useLogto } from "@logto/react";
 import { useLocation } from "wouter";
 
 export default function Auth() {
-  const [_location, setLocation] = useLocation();
-  const { getIdTokenClaims } = useLogto();
+  const [, setLocation] = useLocation();
+  // const { getIdTokenClaims } = useLogto();
 
   const { isLoading } = useHandleSignInCallback(() => {
     (async () => {
-      const claims = await getIdTokenClaims();
-      const isNew = (
-        await (await fetch(`/api/isnewuser/${claims?.sub}`)).json()
-      ).new;
+      // const claims = await getIdTokenClaims();
+      // const isNew = (
+      //   await (await fetch(`/api/isnewuser/${claims?.sub}`)).json()
+      // ).new;
 
-      if (isNew) {
+      if (false) {
         setLocation("/onboarding");
       } else {
         setLocation("/dashboard");
