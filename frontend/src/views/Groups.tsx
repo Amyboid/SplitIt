@@ -16,21 +16,25 @@ export default function Groups() {
 
   return (
     <>
-      <div className="flex flex-col  h-lvh w-lvw">
-        <div className="h-[30%] p-4 flex items-start justify-between bg-[url('/groupbg6.jpg')] bg-center bg-cover  bg-no-repeat">
-          <h1 className="text-2xl font-semibold text-black">Groups</h1>
-          <Link href="/add/group">
-            <Plus className="p-2 size-9 cursor-pointer text-black" />
-          </Link>
-        </div>
-        <div className="p-4  ml-auto mr-auto w-full h-[75%] bg-background relative">
-          {!isGroupExist && (
-            <h1 className="text-muted-foreground font-semibold text-base absolute top-[10%] left-1/2 transform -translate-x-1/2 -translate-y-[10%]">
-              No Groups Available
-            </h1>
-          )}
-          {isGroupExist && <GroupList />}
-        </div>
+      <div className="flex items-center justify-between mt-4 mx-4 z-10 relative">
+        <span className=""><Link to="/dashboard"><ChevronLeft /></Link></span>
+        <TypographyH3 className="">
+          Groups
+        </TypographyH3>
+        <Link href="/add/group">
+          <Plus className="p-2 size-9 cursor-pointer text-black" />
+        </Link>
+      </div>
+      <div className="bg-[url('/groupbg6.jpg')] w-full h-[275px] absolute top-0 bg-contain bg-no-repeat">
+        <div className="w-full h-full bg-gradient-to-b from-transparent via-transparent to-primary-foreground"></div>
+      </div>
+      <div className="p-4 mt-[250px] ml-auto mr-auto w-full h-[75%] bg-background relative">
+        {!isGroupExist && (
+          <h1 className="text-muted-foreground font-semibold text-base absolute top-[5%] left-1/2 transform -translate-x-1/2 -translate-y-[10%]">
+            No Groups Available
+          </h1>
+        )}
+        {isGroupExist && <GroupList />}
       </div>
     </>
   );
