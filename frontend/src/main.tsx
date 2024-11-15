@@ -3,10 +3,11 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { LogtoProvider, LogtoConfig } from "@logto/react";
+import { LogtoAppId, LogtoEndpoint } from "./lib/const.ts";
 
 const config: LogtoConfig = {
-  endpoint: "https://7wyo02.logto.app/",
-  appId: "5g5383xkm0aacfs62bn7g",
+  endpoint: LogtoEndpoint,
+  appId: LogtoAppId,
 };
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

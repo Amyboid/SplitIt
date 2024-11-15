@@ -1,6 +1,7 @@
 import { ModeToggle } from "@/components/mode-toggle";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { TypographyH3 } from "@/components/ui/typography-h3";
+import { PSRedirectURI } from "@/lib/const";
 import { useLogto } from "@logto/react";
 import { ChevronLeft, CircleUser, Languages, LogOut, Scale } from "lucide-react";
 import { Link, useLocation } from "wouter";
@@ -26,7 +27,7 @@ export default function Settings() {
             <CircleUser size={20} className="mt-1 mr-4" /> <CardTitle className=" text-lg">Account</CardTitle>
           </CardHeader>
         </Card>
-        <Card onClick={async () => await signOut("http://localhost:5173/")}>
+        <Card onClick={async () => await signOut(PSRedirectURI)}>
           <CardHeader className="p-4 flex flex-row items-center">
             <LogOut size={20} className="mt-1 mr-4" /> <CardTitle className=" text-lg">Log Out</CardTitle>
           </CardHeader>

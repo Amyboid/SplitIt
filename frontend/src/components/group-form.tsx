@@ -16,7 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { SearchBox } from "@/components/search-box";
 import { Trash2 } from "lucide-react";
 import { useAtom } from "jotai";
-import { isGroupExistAtom, newGroupArrayAtom } from "@/states";
+import { isGroupExistAtom, newGroupArrayAtom } from "@/lib/states";
 import { Link } from "wouter"; 
 
 const userObj = z.object({

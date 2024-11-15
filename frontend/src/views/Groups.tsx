@@ -1,8 +1,9 @@
-import { ArrowRight, Plus, Users } from "lucide-react";
+import { ArrowRight, ChevronLeft, Plus, Users } from "lucide-react";
 import { useEffect } from "react";
 import { useAtom } from "jotai";
-import { isGroupExistAtom, newGroupArrayAtom } from "@/states";
+import { isGroupExistAtom, newGroupArrayAtom } from "@/lib/states";
 import { Link } from "wouter";
+import { TypographyH3 } from "@/components/ui/typography-h3";
 
 export default function Groups() {
   const [newGroupArray, _] = useAtom(newGroupArrayAtom);
