@@ -26,10 +26,10 @@ function App() {
         <Route path="/add/expense" component={ExpenseInput} />
         <Route path="/groups" component={Groups} />
         <Route path="/add/group" component={GroupForm} />
-        <Route path="/group/details" component={GroupDetails} /> 
-        <Route path="/add/expenses" component={ExpenseInput} />
-        <Route path="/group/settings" component={GroupSettings} />
-        <Route path="/group/expenses" component={Expenses} />
+        <Route path="/group/:name/details" component={GroupDetails} />
+        <Route path="/group/:name/add/expenses" component={ExpenseInput} />
+        <Route path="/group/:name/settings" component={GroupSettings} />
+        <Route path="/group/:name/expenses" component={Expenses} />
       </ThemeProvider>
     </>
   );

@@ -1,4 +1,4 @@
-import { ArrowRight, ChevronLeft, Plus, Users } from "lucide-react";
+import { ArrowRight, ChevronLeft, Plus, Trash2, Users } from "lucide-react";
 import { useEffect } from "react";
 import { useAtom } from "jotai";
 import { isGroupExistAtom, newGroupArrayAtom } from "@/lib/states";
@@ -6,14 +6,21 @@ import { Link } from "wouter";
 import { TypographyH3 } from "@/components/ui/typography-h3";
 
 export default function Groups() {
-  const [newGroupArray, _] = useAtom(newGroupArrayAtom);
+  const [newGroupArray, setNewGroupArray] = useAtom(newGroupArrayAtom);
   const [isGroupExist, setIsGroupExist] = useAtom(isGroupExistAtom);
   useEffect(() => {
     if (newGroupArray.length == 0) {
       setIsGroupExist(false);
     }
   }, [newGroupArray]);
-
+  useEffect(() => {
+    const data: any = Object.values(JSON.parse(localStorage.getItem("group")!))
+    
+    if (data) {
+      setIsGroupExist(true)
+      setNewGroupArray([...data])
+    }
+  }, [])
   return (
     <>
       <div className="flex items-center justify-between mt-4 mx-4 z-10 relative">
@@ -21,11 +28,11 @@ export default function Groups() {
         <TypographyH3 className="">
           Groups
         </TypographyH3>
-        <Link href="/add/group">
+        <Link to="/add/group">
           <Plus className="p-2 size-9 cursor-pointer text-black" />
         </Link>
       </div>
-      <div className="bg-[url('/groupbg6.jpg')] w-full h-[275px] absolute top-0 bg-contain bg-no-repeat">
+      <div className="bg-[url('/groupbg6.jpg')] w-full h-[30%] absolute top-0 bg-cover bg-no-repeat">
         <div className="w-full h-full bg-gradient-to-b from-transparent via-transparent to-primary-foreground"></div>
       </div>
       <div className="p-4 mt-[250px] ml-auto mr-auto w-full h-[75%] bg-background relative">
@@ -88,7 +95,7 @@ function GroupCard({ group, deleteGroup, deleteIndex }: GroupCardProps) {
             <Users className="mr-1 w-4 cursor-pointer" />
             {group.groupmembers.length}
           </div>
-          <Link href="/group/details">
+          <Link to={`/group/${group.groupname}/details`}>
             <div className="flex items-start justify-center gap-1 mt-2">
               <p className="text-xs font-semibold block leading-3">view</p>
               <ArrowRight className="size-3 leading-3 font-bold text-chart-4" />

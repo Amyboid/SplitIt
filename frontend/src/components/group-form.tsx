@@ -17,7 +17,7 @@ import { SearchBox } from "@/components/search-box";
 import { Trash2 } from "lucide-react";
 import { useAtom } from "jotai";
 import { isGroupExistAtom, newGroupArrayAtom } from "@/lib/states";
-import { Link } from "wouter"; 
+import { Link, useLocation } from "wouter";
 
 const userObj = z.object({
   name: z.string(),
@@ -37,8 +37,8 @@ const formSchema = z.object({
 });
 
 export default function GroupForm() {
-  const [_, setNewGroupArray] = useAtom(newGroupArrayAtom);
-
+  const [_, setLocation] = useLocation();
+  const [, setNewGroupArray] = useAtom(newGroupArrayAtom); 
   const [__, setIsGroupExist] = useAtom(isGroupExistAtom);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -61,9 +61,16 @@ export default function GroupForm() {
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    const newValue = {
+      [values.groupname]: values
+    }
+    console.log(newValue);
     setNewGroupArray((prev: any) => [...prev, values]);
+    const data = JSON.parse(localStorage.getItem("group")!)
+    data ? localStorage.setItem("group", JSON.stringify({ ...data, ...newValue })) : localStorage.setItem("group", JSON.stringify({ ...newValue }))
     setIsGroupExist(true);
     form.reset();
+    setLocation("/groups")
   }
 
   return (
@@ -138,7 +145,7 @@ export default function GroupForm() {
               />
             </div>
             <Button type="submit">Create</Button>
-            <Link href="/groups">
+            <Link to="/groups">
               <Button type="button" variant="outline" className="ml-4">
                 Back
               </Button>
