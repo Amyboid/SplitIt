@@ -11,6 +11,7 @@ import {
 import { Input } from "./ui/input";
 import { useState } from "react";
 import { Search } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface SearchBarProps {
   handleChange: (value: string) => void;
@@ -28,14 +29,14 @@ export function SearchBox({ onAddMember }: any) {
   const [open, setOpen] = useState(false);
 
   function fetchData(value: string) {
-    fetch("https://jsonplaceholder.typicode.com/users").then((response) =>
+    fetch("/api/users").then((response) =>
       response.json().then((data) => {
         const result = data.filter((user: any) => {
           return (
             value &&
             user &&
-            user.name &&
-            user.name.toLowerCase().includes(value.toLowerCase())
+            user.username &&
+            user.username.toLowerCase().includes(value.toLowerCase())
           );
         });
         setFilteredUser(result);
@@ -133,14 +134,19 @@ function SearchBar({
             filteredUser.map((user: any, id) => (
               <div
                 key={id}
-                onClick={() => handleClose(user.name)}
+                onClick={() => handleClose(user.username)}
                 className="flex items-center gap-3 cursor-pointer rounded-sm px-4 py-2 text-sm"
               >
-                <div className="w-8 h-8 rounded-full bg-secondary"></div>
+                <Avatar>
+                  <AvatarImage src={user.avatar} alt="user avatar" />
+                  <AvatarFallback>UA</AvatarFallback>
+                </Avatar>
                 <div>
-                  {user.name}
+                  <span className="capitalize">
+                    {user.name}
+                  </span>
                   <p className="text-xs text-muted-foreground">
-                    Add me {emoji[Math.floor(Math.random() * emoji.length)]}{" "}
+                    @{user.username}
                   </p>
                 </div>
               </div>
