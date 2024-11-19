@@ -1,4 +1,4 @@
-import { ArrowRight, ChevronLeft, Plus, Trash2, Users } from "lucide-react";
+import { ArrowRight, ChevronLeft, Plus, Users } from "lucide-react";
 import { useEffect } from "react";
 import { useAtom } from "jotai";
 import { isGroupExistAtom, newGroupArrayAtom } from "@/lib/states";

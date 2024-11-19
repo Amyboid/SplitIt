@@ -1,4 +1,4 @@
-import { useLogto } from "@logto/react";
+import { IdTokenClaims, useLogto } from "@logto/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -60,10 +60,10 @@ export default function Onboarding() {
           />
           <FormField
             control={form.control}
-            name="firstname"
+            name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>First Name</FormLabel>
+                <FormLabel>Full Name</FormLabel>
                 <FormControl>
                   <Input placeholder="shadcn" {...field} />
                 </FormControl>

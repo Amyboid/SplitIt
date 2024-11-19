@@ -38,7 +38,7 @@ const formSchema = z.object({
 
 export default function GroupForm() {
   const [_, setLocation] = useLocation();
-  const [, setNewGroupArray] = useAtom(newGroupArrayAtom); 
+  const [, setNewGroupArray] = useAtom(newGroupArrayAtom);
   const [__, setIsGroupExist] = useAtom(isGroupExistAtom);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

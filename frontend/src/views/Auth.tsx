@@ -3,16 +3,17 @@ import { useLocation } from "wouter";
 
 export default function Auth() {
   const [, setLocation] = useLocation();
-  // const { getIdTokenClaims } = useLogto();
+  const { getIdTokenClaims } = useLogto();
 
   const { isLoading } = useHandleSignInCallback(() => {
     (async () => {
-      // const claims = await getIdTokenClaims();
-      // const isNew = (
-      //   await (await fetch(`/api/isnewuser/${claims?.sub}`)).json()
-      // ).new;
-
-      if (false) {
+      const claims = await getIdTokenClaims();
+      const isNew = (
+        await (await fetch(`/api/isnewuser/${claims?.sub}`)).json()
+      ).new;
+      console.log("neww",isNew);
+      
+      if (isNew) {
         setLocation("/onboarding");
       } else {
         setLocation("/dashboard");
