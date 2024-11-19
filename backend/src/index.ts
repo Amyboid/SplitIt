@@ -48,7 +48,7 @@ app.post("/onboarduser", async (c) => {
 app.get("/users", async (c) => {
   return c.json(
     (await getUsers())
-      .map((e) => ({ username: e.username, name: e.name, avatar: (HOSTURL + e.avatar.split('.local/')[1]) }))
+      .map((e: any) => ({ username: e.username, name: e.name, avatar: (HOSTURL + e.avatar.split('.local/')[1]) }))
   )
 })
 
