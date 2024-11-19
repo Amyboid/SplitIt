@@ -10,18 +10,18 @@ import { userAtom } from "@/lib/user";
 import { Link, useLocation } from "wouter";
 
 export default function Dashboard() {
-  const { isAuthenticated, getIdTokenClaims } = useLogto();
+  const { isAuthenticated, fetchUserInfo } = useLogto();
   const [, setLocation] = useLocation();
   const [user, setUser] = useAtom(userAtom);
 
   useEffect(() => {
     (async () => {
       if (isAuthenticated) {
-        const claims = await getIdTokenClaims();
-        setUser(claims);
+        const userInfo = await fetchUserInfo();
+        setUser(userInfo);
       }
     })();
-  }, [getIdTokenClaims, isAuthenticated]);
+  }, [fetchUserInfo, isAuthenticated]);
 
   if (!isAuthenticated) setLocation("/");
 
@@ -31,7 +31,7 @@ export default function Dashboard() {
         <TypographyH3 className="inline">
           Hi,{" "}
           <span className="capitalize mr-2 gradiented-greet-text">
-            {user?.username?.toLowerCase()}
+            {user?.name?.toLowerCase()}
           </span>
           <img
             src={WavingHandSvg}
