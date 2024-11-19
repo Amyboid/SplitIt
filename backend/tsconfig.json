@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
+    "target": "ES6",
     "strict": true,
     "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx"
+    "jsxImportSource": "hono/jsx",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
   }
 }
+
