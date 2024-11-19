@@ -14,12 +14,25 @@ export default function Groups() {
     }
   }, [newGroupArray]);
   useEffect(() => {
-    const data: any = Object.values(JSON.parse(localStorage.getItem("group")!))
-    
-    if (data) {
-      setIsGroupExist(true)
-      setNewGroupArray([...data])
-    }
+    (async () => {
+      const data = await fetch("/api/groups")
+      console.log("cvbn: ", data);
+    })()
+
+    // const newValue = {
+    //   [values.groupname]: values
+    // }
+    // console.log(newValue);
+    // const data = JSON.parse(localStorage.getItem("group")!)
+    // data ? localStorage.setItem("group", JSON.stringify({ ...data, ...newValue })) : localStorage.setItem("group", JSON.stringify({ ...newValue }))
+    // setIsGroupExist(true);
+
+    // const data: any = Object.values(JSON.parse(localStorage.getItem("group")!))
+
+    // if (data) {
+    //   setIsGroupExist(true)
+    //   setNewGroupArray([...data])
+    // }
   }, [])
   return (
     <>
@@ -48,24 +61,17 @@ export default function Groups() {
 }
 
 function GroupList() {
-  const [newGroupArray, setNewGroupArray] = useAtom(newGroupArrayAtom);
-  function handleDeleteGroup(index: number) {
-    const newReducedGroup = newGroupArray.filter((_, itemindex) => {
-      return itemindex !== index;
-    });
-    setNewGroupArray(newReducedGroup);
-  }
+  const [newGroupArray, _setNewGroupArray] = useAtom(newGroupArrayAtom);
+
   return (
     <div className="flex flex-col gap-4">
       <h2 className="text-muted-foreground font-semibold text-base">
         Hot Groups
       </h2>
       <div className="p-0 grid grid-cols-2 gap-4  pt-4">
-        {newGroupArray.map((group, index) => (
+        {newGroupArray.map((group) => (
           <GroupCard
             group={group}
-            deleteIndex={index}
-            deleteGroup={handleDeleteGroup}
           />
         ))}
       </div>
@@ -80,10 +86,8 @@ interface GroupCardProps {
     groupmembers: string[];
     groupdescription: string;
   };
-  deleteIndex: number;
-  deleteGroup: (index: number) => void;
 }
-function GroupCard({ group, deleteGroup, deleteIndex }: GroupCardProps) {
+function GroupCard({ group }: GroupCardProps) {
   return (
     <>
       <div className="w-full relative h-24 rounded-xl bg-secondary text-div-foreground flex flex-col justify-between p-3 pb-2">
@@ -102,10 +106,6 @@ function GroupCard({ group, deleteGroup, deleteIndex }: GroupCardProps) {
             </div>
           </Link>
         </div>
-        {/* <Trash2
-            className="absolute right-3 top-3 w-5 text-destructive cursor-pointer"
-            onClick={() => deleteGroup(deleteIndex)}
-            /> */}
       </div>
     </>
   );
