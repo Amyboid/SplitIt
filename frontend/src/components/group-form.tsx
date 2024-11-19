@@ -60,15 +60,15 @@ export default function GroupForm() {
     append({ name: memberName });
   };
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    const newValue = {
-      [values.groupname]: values
-    }
-    console.log(newValue);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    await fetch('/api/add/group', {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: 'POST',
+      body: JSON.stringify(values)
+    });
     setNewGroupArray((prev: any) => [...prev, values]);
-    const data = JSON.parse(localStorage.getItem("group")!)
-    data ? localStorage.setItem("group", JSON.stringify({ ...data, ...newValue })) : localStorage.setItem("group", JSON.stringify({ ...newValue }))
-    setIsGroupExist(true);
     form.reset();
     setLocation("/groups")
   }
