@@ -2,7 +2,7 @@
   "name": "backend",
   "scripts": {
     "dev": "bun run --hot src/index.ts",
-    "createdb": "bun run scripts/dbinitializer.ts"
+    "dbinit": "bun run scripts/dbinitializer.ts"
   },
   "dependencies": {
     "hono": "^4.6.10"

@@ -3,23 +3,26 @@ import { Database } from "bun:sqlite";
 
 
 const helpText = `
-Usage: bun createdb [command] [options]
+Usage: bun dbinit [command] [options]
 
 This utility allows you to bootstrap a SQLite database with required tables for development.
 
 Commands:
-  help                Display this help text.
-  table <tableName>   Create the specified table if it does not exist.
-  all                 Create all tables.
+  help                      Display this help text.
+  table <tableName>         Create the specified table if it does not exist.
+  all                       Create all tables.
+  drop  <tableName | all>   Delete the specified table if exists. 
+                            To delete all tables, specify 'all' and include
+                            the '--i-am-sure' flag to confirm the irreversible action.
 
 Options:
-  <tableName>         The name of the table to create (only applicable with the 'table' command).
-                      Available tables: NewUsers, Users, Groups, UserGroups,
-                      Notifications, Expenses, ExpenseDivisions.
+  <tableName>               The name of the table to create (only applicable with the 'table' command).
+                            Available tables: NewUsers, Users, Groups, UserGroups,
+                            Notifications, Expenses, ExpenseDivisions.
 
 Example:
-  bun createdb all               # Creates all tables
-  bun createdb table Users       # Creates the Users table
+  bun dbinit all               # Creates all tables
+  bun dbinit table Users       # Creates the Users table
 
 Notes:
 - Ensure that you have the necessary permissions to create a database file in the current directory.
