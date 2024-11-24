@@ -117,6 +117,15 @@ const tables = {
     `
 };
 
+const tableNameMapping = new Map([
+    ["newusers", "NewUsers"],
+    ["users", "Users"],
+    ["groups", "Groups"],
+    ["usergroups", "UserGroups"],
+    ["notifications", "Notifications"],
+    ["expenses", "Expenses"],
+    ["expensedivisions", "ExpenseDivisions"]
+]);
 
 
 if (Bun.argv[2] === "help") {
@@ -128,15 +137,36 @@ if (Bun.argv[2] === "table") {
     const tableName = Object.keys(tables).filter((v) => v === Bun.argv[3]);
     if (!tableName.length) {
         console.log(helpText);
-        exit(2);
+        exit(196);
     }
     runQuery(DB_NAME, [tables[tableName[0] as keyof typeof tables]]);
     exit(0);
 }
 
+
 if (Bun.argv[2] === "drop") {
+    if (!Object.keys(tables).includes(Bun.argv[3]) && Bun.argv[3] !== "all") {
+        console.log(helpText);
+        exit(196);
+    }
+
     const db = new Database(DB_NAME);
-    const q = db.query("DROP TABLE IF EXISTS NewUsers").run();
+
+    if (Bun.argv[3] === "all") {
+        if (Bun.argv[4] !== "--i-am-sure") {
+            const answer = prompt("\x1b[38;5;197mThis action is irreversible and cannot be undone.\x1b[0m\nAre you sure you want to delete all existing database records? [Y/n] ");
+            if (answer !== "Y") {
+                console.log("Aborting!");
+                exit(0);
+            }
+        }
+        Object.keys(tables).map((tableName) => {
+            db.query(`DROP TABLE IF EXISTS ${tableNameMapping.get(tableName)};`).run();
+        })
+        exit(0)
+    }
+
+    db.query(`DROP TABLE IF EXISTS ${tableNameMapping.get(Bun.argv[3])};`).run();
     exit(0);
 }
 
