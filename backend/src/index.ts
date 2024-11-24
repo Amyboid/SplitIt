@@ -7,7 +7,14 @@ import { serveStatic } from "hono/bun";
 const HOSTURL = "http://localhost:5173/api/avatars/";
 
 const app = new Hono();
-app.use(logger())
+app.use(logger());
+
+app.get(
+  '/avatars/*',
+  serveStatic({
+    root: './',
+  })
+)
 
 app.post("/newuser", async (c) => {
   const id = (await c.req.json()).user.id;
@@ -64,14 +71,10 @@ app.post("/add/group", async (c) => {
 })
 
 
+app.get('/test', (c) => {
+  return c.text("running...");
+})
 
-
-app.get(
-  '/avatars/*',
-  serveStatic({
-    root: './',
-  })
-)
 
 
 
