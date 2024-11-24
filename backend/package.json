@@ -2,7 +2,8 @@
   "name": "backend",
   "scripts": {
     "dev": "bun run --hot src/index.ts",
-    "dbinit": "bun run scripts/dbinitializer.ts"
+    "dbinit": "bun run scripts/dbinitializer.ts",
+    "asrun": "bun run scripts/asyncrunner.ts"
   },
   "dependencies": {
     "hono": "^4.6.10"
