@@ -30,8 +30,8 @@ Notes:
 - If the database or a table already exists, it will not be recreated.
 
 Error Codes:
-  1 - Invalid command or missing arguments.
-  2 - Table name not found or invalid.
+  169 - Invalid command or missing arguments.
+  196 - Table name not found or invalid.
 `;
 
 
@@ -146,6 +146,6 @@ if (Bun.argv[2] === "all") {
 }
 
 console.log(helpText);
-exit(1);
+exit(169);
 
 
