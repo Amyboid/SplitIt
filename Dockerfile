@@ -7,6 +7,7 @@ COPY ./backend/package.json ./
 
 RUN bun install
 RUN bun dbinit all
+RUN chmod 600 database.sqlite
 
 # run the app
 USER bun
