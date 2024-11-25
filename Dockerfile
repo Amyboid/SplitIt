@@ -2,10 +2,11 @@ FROM oven/bun:1
 WORKDIR /usr/src/app
 
 COPY ./backend/src ./src
-COPY ./backend/database.sqlite ./
+COPY ./backend/scripts/ ./scripts
 COPY ./backend/package.json ./
 
 RUN bun install
+RUN bun dbinit all
 
 # run the app
 USER bun
