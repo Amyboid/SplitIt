@@ -1,12 +1,14 @@
 import { ArrowRight, ChevronLeft, Plus, Users } from "lucide-react";
 import { useEffect } from "react";
 import { useAtom } from "jotai";
-import { isGroupExistAtom, newGroupArrayAtom } from "@/lib/states";
+import { Group, isGroupExistAtom, newGroupArrayAtom } from "@/lib/states";
 import { Link } from "wouter";
 import { TypographyH3 } from "@/components/ui/typography-h3";
+import { userAtom } from "@/lib/user";
 
 export default function Groups() {
   const [newGroupArray, setNewGroupArray] = useAtom(newGroupArrayAtom);
+  const [user] = useAtom(userAtom);
   const [isGroupExist, setIsGroupExist] = useAtom(isGroupExistAtom);
   useEffect(() => {
     if (newGroupArray.length == 0) {
@@ -15,25 +17,19 @@ export default function Groups() {
   }, [newGroupArray]);
   useEffect(() => {
     (async () => {
-      const data = await fetch("/api/groups")
+      const data = await (await fetch("/api/groups/" + user?.username)).json()
       console.log("cvbn: ", data);
+      if (data) {
+        setIsGroupExist(true)
+        setNewGroupArray([...data])
+      }
     })()
-
-    // const newValue = {
-    //   [values.groupname]: values
-    // }
-    // console.log(newValue);
-    // const data = JSON.parse(localStorage.getItem("group")!)
-    // data ? localStorage.setItem("group", JSON.stringify({ ...data, ...newValue })) : localStorage.setItem("group", JSON.stringify({ ...newValue }))
-    // setIsGroupExist(true);
-
-    // const data: any = Object.values(JSON.parse(localStorage.getItem("group")!))
-
-    // if (data) {
-    //   setIsGroupExist(true)
-    //   setNewGroupArray([...data])
-    // }
   }, [])
+
+  useEffect(() => {
+    console.log("njk: ", newGroupArray);
+
+  }, [newGroupArray])
   return (
     <>
       <div className="flex items-center justify-between mt-4 mx-4 z-10 relative">
@@ -68,7 +64,7 @@ function GroupList() {
       <h2 className="text-muted-foreground font-semibold text-base">
         Hot Groups
       </h2>
-      <div className="p-0 grid grid-cols-2 gap-4  pt-4">
+      <div className="p-0 grid grid-cols-2 gap-4 pt-4">
         {newGroupArray.map((group) => (
           <GroupCard
             group={group}
@@ -79,27 +75,20 @@ function GroupList() {
   );
 }
 
-//this is group card component it has delete,expand feature
-interface GroupCardProps {
-  group: {
-    groupname: string;
-    groupmembers: string[];
-    groupdescription: string;
-  };
-}
-function GroupCard({ group }: GroupCardProps) {
+
+function GroupCard({ group }: { group: Group }) {
   return (
     <>
       <div className="w-full relative h-24 rounded-xl bg-secondary text-div-foreground flex flex-col justify-between p-3 pb-2">
         <h1 className="text-lg font-medium leading-none tracking-tight">
-          {group.groupname}
+          {group.GroupName}
         </h1>
         <div className="flex  justify-between">
           <div className="flex">
             <Users className="mr-1 w-4 cursor-pointer" />
-            {group.groupmembers.length}
+            {group.GroupMembers.length}
           </div>
-          <Link to={`/group/${group.groupname}/details`}>
+          <Link to={`/group/${group.GroupId}/details`}>
             <div className="flex items-start justify-center gap-1 mt-2">
               <p className="text-xs font-semibold block leading-3">view</p>
               <ArrowRight className="size-3 leading-3 font-bold text-chart-4" />

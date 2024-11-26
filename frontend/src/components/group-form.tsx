@@ -16,8 +16,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { SearchBox } from "@/components/search-box";
 import { Trash2 } from "lucide-react";
 import { useAtom } from "jotai";
-import { isGroupExistAtom, newGroupArrayAtom } from "@/lib/states";
+import { newGroupArrayAtom } from "@/lib/states";
 import { Link, useLocation } from "wouter";
+import { userAtom } from "@/lib/user";
 
 const userObj = z.object({
   name: z.string(),
@@ -37,9 +38,9 @@ const formSchema = z.object({
 });
 
 export default function GroupForm() {
-  const [_, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
   const [, setNewGroupArray] = useAtom(newGroupArrayAtom);
-  const [__, setIsGroupExist] = useAtom(isGroupExistAtom);
+  const [user] = useAtom(userAtom);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -61,6 +62,7 @@ export default function GroupForm() {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    values.groupmembers = [...values.groupmembers,{name: user?.username as string}]
     await fetch('/api/add/group', {
       headers: {
         "Content-Type": "application/json",

@@ -7,20 +7,23 @@ import {
 import { Link, useLocation, useParams } from "wouter";
 import { TypographyH3 } from "./ui/typography-h3";
 import { useEffect, useState } from "react";
+import { useAtom } from "jotai";
+import { Group, newGroupArrayAtom } from "@/lib/states";
 
-interface memberProps {
-  name: string
-}
 export default function GroupDetails() {
-  const [groupMembers, setgroupMembers] = useState<memberProps[]>()
+  const [group,setGroup] = useState<Group>()
   const [, setLocation] = useLocation();
+  const [newGroupArray] = useAtom(newGroupArrayAtom);
 
-  const groupname: string = useParams().name!;
+
+  const GroupId: string = useParams().id!;
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("group")!)[groupname];
+    const data = (newGroupArray.filter(e => e.GroupId.toString() === GroupId))[0]
     if (data) {
-      const members = data.groupmembers;
-      setgroupMembers([...members])
+      const members = data.GroupMembers;
+      console.log(members);
+      setGroup(data)
+      // setgroupMembers(members)
     }
     else {
       setLocation("/groups")
@@ -34,7 +37,7 @@ export default function GroupDetails() {
         <div className="h-[30%] mt-4 mx-4 flex items-start justify-between z-10 ">
           <span className=" mt-[.37rem] mr-auto"><Link to="/groups"><ChevronLeft /></Link></span>
           <TypographyH3 className="-ml-6 mr-auto">
-            {groupname}
+            {group?.GroupName}
           </TypographyH3>
         </div>
         <div className="bg-[url('/groupbg3.jpg')] w-full h-[30%] -z-10 absolute left-0 top-0 bg-cover bg-no-repeat">
@@ -54,13 +57,13 @@ export default function GroupDetails() {
               Options
             </h2>
             <div className="p-6 grid grid-cols-2 grid-rows-2 items-center justify-center gap-4">
-              <Link className="group-option-icons col-span-1" to={`/group/${groupname}/add/expenses`}>
+              <Link className="group-option-icons col-span-1" to={`/group/${GroupId}/add/expenses`}>
                 <PackagePlus className="text-chart-3" />
               </Link>
-              <Link className="group-option-icons col-span-1" to={`/group/${groupname}/settings`}>
+              <Link className="group-option-icons col-span-1" to={`/group/${GroupId}/settings`}>
                 <Settings className="text-chart-3" />
               </Link>
-              <Link className="group-option-icons col-span-2 gap-4" to={`/group/${groupname}/expenses`}>
+              <Link className="group-option-icons col-span-2 gap-4" to={`/group/${GroupId}/expenses`}>
                 <PiggyBank className="text-chart-3" />
                 <p className="text-xs text-primary">View Expenses</p>
               </Link>
@@ -72,13 +75,13 @@ export default function GroupDetails() {
             </h2>
             <div className="rounded-lg border border-chart-3 p-6">
               <div className="gap-2 flex flex-col items-center justify-center">
-                {groupMembers && groupMembers.map((member: any, index) => {
+                {group?.GroupMembers && group.GroupMembers.map((name: string, index) => {
                   return (
                     <div
                       key={index}
                       className="shadow-sm w-full text-center rounded-lg bg-secondary text-card-foreground text-sm p-2 "
                     >
-                      {member.name}
+                      {name}
                     </div>
                   );
                 })}
