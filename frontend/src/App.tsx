@@ -13,6 +13,7 @@ import GroupForm from "./components/group-form";
 import GroupDetails from "./components/group-details";
 import GroupSettings from "./views/GroupSettings";
 import Expenses from "./views/Expenses";
+
 function App() {
   return (
     <>
@@ -23,13 +24,12 @@ function App() {
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/notification" component={Notifications} />
         <Route path="/settings" component={Settings} />
-        <Route path="/add/expense" component={ExpenseInput} />
         <Route path="/groups" component={Groups} />
         <Route path="/add/group" component={GroupForm} />
-        <Route path="/group/:name/details" component={GroupDetails} />
-        <Route path="/group/:name/add/expenses" component={ExpenseInput} />
-        <Route path="/group/:name/settings" component={GroupSettings} />
-        <Route path="/group/:name/expenses" component={Expenses} />
+        <Route path="/group/:id/details" component={GroupDetails} />
+        <Route path="/group/:id/add/expenses" component={ExpenseInput} />
+        <Route path="/group/:id/settings" component={GroupSettings} />
+        <Route path="/group/:id/expenses" component={Expenses} />
       </ThemeProvider>
     </>
   );
