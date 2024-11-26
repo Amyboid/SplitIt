@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { fillUserData, getUsers } from "./lib/logto";
+import { fetchAccessToken, fillUserData, getUsers } from "./lib/logto";
 import { db } from "./lib/database";
 import { logger } from "hono/logger";
 import { serveStatic } from "hono/bun";
@@ -52,18 +52,75 @@ app.get("/users", async (c) => {
   )
 })
 
-app.get("/groups", (c) => {
-  return c.text("hey")
+app.get("/groups/:username", (c) => {
+  const { username } = c.req.param();
+  const groupIds = db.getGroupByUsername(username).map((e) => e[1]) as (number | bigint)[]
+  console.log(groupIds);
+  const groups = groupIds.map(e => ({
+    ...db.getGroupById(e)[0] as Object,
+    GroupMembers: db.getMembersByGroupId(e)
+  }))
+
+  return c.json(groups)
+})
+
+app.get("/groups/:groupid/members", async (c) => {
+  const { groupid } = c.req.param();
+  let gid: number | bigint = 0;
+
+  if (!/^-?\d+$/.test(groupid)) {
+    throw new Error("Invalid number string");
+  }
+
+  // Convert to BigInt if the number is too large for a regular integer
+  if (groupid.length > 15) {
+    gid = BigInt(groupid);
+  } else {
+    gid = parseInt(groupid);
+  }
+
+  const members = db.getMembersByGroupId(gid);
+
+  return c.json(
+    (await getUsers()).filter((e: any) => members.includes(e.username))
+      .map((e: any) => ({ username: e.username, name: e.name, avatar: (HOSTURL + e.avatar.split('.local/')[1]) }))
+  );
+})
+
+app.post("/groups/:groupid/expense", async (c) => {
+  const { groupid } = c.req.param();
+  let gid: number | bigint = 0;
+  if (!/^-?\d+$/.test(groupid)) {
+    throw new Error("Invalid number string");
+  }
+  if (groupid.length > 15) {
+    gid = BigInt(groupid);
+  } else {
+    gid = parseInt(groupid);
+  }
+
+  const data = await c.req.json();
+
+  console.log(data);
+
+  const ExpenseId = db.addExpense({ GroupId: gid, ...data });
+  data.ExpenseDivisions.map((e:any) => {
+    // console.log(e);
+    
+    db.addExpenseDivision({ExpenseId: ExpenseId, ...e})
+  })
+
+  return c.json([]);
 })
 
 app.post("/add/group", async (c) => {
   const data = await c.req.json()
-  db.setNewGroup(data.groupname, data.groupdescription)
-  //todo
+  console.log(data);
+
+  const groupId = (db.setNewGroup(data.groupname, data.groupdescription)).lastInsertRowid
+  db.addUserToGroup(groupId, data.groupmembers.map((e: any) => e.name))
   return c.text("hp")
 })
-
-
 
 
 app.get(

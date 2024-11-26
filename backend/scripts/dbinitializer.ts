@@ -133,7 +133,7 @@ if (Bun.argv[2] === "table") {
 
 if (Bun.argv[2] === "drop") {
     const db = new Database(DB_NAME);
-    const q = db.query("DROP TABLE IF EXISTS NewUsers").run();
+    const q = db.query("DROP TABLE IF EXISTS Groups").run();
     exit(0);
 }
 
