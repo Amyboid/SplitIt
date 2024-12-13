@@ -77,22 +77,23 @@ export default function ExpenseInput() {
       return;
     }
 
-
-    await fetch(`/api//groups/${GroupId}/expense`, {
+    console.log("proff",profiles);
+    
+    console.log(await (await fetch(`/api//groups/${GroupId}/expense`, {
       headers: {
         "Content-Type": "application/json",
       },
       method: 'POST',
       body: JSON.stringify({
-        ExpenseTitle: values.title, Date: values.date, Category: values.category, Purpose: values.message, Amount: values.amount, DivisionType: splitType, ExpenseDivisions: [profiles.map((user:any, index) => ({
+        ExpenseTitle: values.title, Date: values.date, Category: values.category, Purpose: values.message, Amount: values.amount, DivisionType: splitType, ExpenseDivisions: profiles.map((user:any, index) => ({
           Username: user.username,
           Percentage: memberAmounts[index] !== undefined ? memberAmounts[index] : null // Handle case where percentages array is shorter
-        }))]
+        }))
       })
-    });
+    })).text());
 
 
-    console.log(splitType, "fffd", memberAmounts);
+    // console.log(splitType, "fffd", memberAmounts);
 
 
     // Calculate split amounts based on the selected type
@@ -105,13 +106,13 @@ export default function ExpenseInput() {
       return 0;
     });
 
-    console.log("Split amounts:", splitAmounts);
-    console.log("Submitted values:", {
-      ...values, DivisionType: splitType, ExpenseDivisions: [profiles.map((username, index) => ({
-        Username: username,
-        Percentage: memberAmounts[index] !== undefined ? memberAmounts[index] : null // Handle case where percentages array is shorter
-      }))]
-    });
+    // console.log("Split amounts:", splitAmounts);
+    // console.log("Submitted values:", {
+    //   ...values, DivisionType: splitType, ExpenseDivisions: profiles.map((username, index) => ({
+    //     Username: username,
+    //     Percentage: memberAmounts[index] !== undefined ? memberAmounts[index] : null // Handle case where percentages array is shorter
+    //   }))
+    // });
     // Handle form submission logic here
   };
 

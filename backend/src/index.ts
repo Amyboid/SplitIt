@@ -7,7 +7,14 @@ import { serveStatic } from "hono/bun";
 const HOSTURL = "http://localhost:5173/api/avatars/";
 
 const app = new Hono();
-app.use(logger())
+app.use(logger());
+
+app.get(
+  '/avatars/*',
+  serveStatic({
+    root: './',
+  })
+)
 
 app.post("/newuser", async (c) => {
   const id = (await c.req.json()).user.id;
@@ -99,15 +106,20 @@ app.post("/groups/:groupid/expense", async (c) => {
     gid = parseInt(groupid);
   }
 
-  const data = await c.req.json();
+  let data = await c.req.json();
 
-  console.log(data);
+  console.log("datta:  ", data);
+  for (const element of data.ExpenseDivisions) {
+    console.log("elem:  ", element);
+    if (isNaN(element.Percentage)) return c.text("error")
+  }
 
   const ExpenseId = db.addExpense({ GroupId: gid, ...data });
-  data.ExpenseDivisions.map((e:any) => {
+
+  data.ExpenseDivisions.map((e: any) => {
     // console.log(e);
-    
-    db.addExpenseDivision({ExpenseId: ExpenseId, ...e})
+
+    db.addExpenseDivision({ ExpenseId: ExpenseId, ...e })
   })
 
   return c.json([]);
@@ -118,10 +130,46 @@ app.post("/add/group", async (c) => {
   console.log(data);
 
   const groupId = (db.setNewGroup(data.groupname, data.groupdescription)).lastInsertRowid
-  db.addUserToGroup(groupId, data.groupmembers.map((e: any) => e.name))
+
+
+  data.groupmembers.forEach((e: any) => {
+    const hostUser = data.groupmembers.at(-1).name
+    // if (e.name === hostUser) {
+    //   db.addUserToGroup(groupId, e.name)
+    //   return
+    // }
+    const InvitationId = (Bun.hash(groupId + e.name + Date.now())).toString(16)
+    const NotificationId = (db.addNotifications(e.name, hostUser + " invited you to join " + data.groupname + "#" + InvitationId, "invitation")).lastInsertRowid;
+
+    db.addUserToGroupInvitations(InvitationId, e.name, groupId, NotificationId)
+  })
   return c.text("hp")
 })
 
+app.get("/invitation/accept/:invitationId", async (c) => {
+  const { invitationId } = c.req.param()
+  const { Username, GroupId, NotificationId } = db.getGroupInfoByInvitationId(invitationId)[0] as any
+  db.addUserToGroup(GroupId, Username)
+  console.log(db.deleteInvitationByInvitationId(invitationId))
+  db.deleteNotificationByNotificationId(NotificationId)
+  return c.text("ok")
+  
+})
+
+app.get("/invitation/reject/:invitationId", async (c) => {
+  const { invitationId } = c.req.param()
+  const { NotificationId } = db.getGroupInfoByInvitationId(invitationId)[0] as any
+  db.deleteInvitationByInvitationId(invitationId)
+  db.deleteNotificationByNotificationId(NotificationId)
+  return c.text("ok")
+})
+app.get("/notifications/:username", async (c) => {
+  const { username } = c.req.param();
+  console.log(username);
+
+  console.log(db.getNotificationsByUsername(username));
+  return c.json(db.getNotificationsByUsername(username))
+})
 
 app.get(
   '/avatars/*',
@@ -129,6 +177,10 @@ app.get(
     root: './',
   })
 )
+app.get('/test', (c) => {
+  return c.text("running...");
+})
+
 
 
 

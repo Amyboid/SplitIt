@@ -1,0 +1,1 @@
+Bun.spawn([process.env.TUNNELER_PATH!, "http", `--url=${process.env.STATIC_URL!}`, process.env.EXPOSED_PORT!], { stdout: "inherit" });

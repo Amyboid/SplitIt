@@ -39,28 +39,56 @@ class DatabaseOrm {
     getGroupById(GroupId: number | bigint) {
         return this.#database.query(`SELECT * FROM Groups WHERE GroupId=?;`).all(GroupId);
     }
-    addUserToGroup(GroupId: number | bigint, Usernames: string[]) {
-        for (const name of Usernames) {
-            this.#database.query(`
+    addUserToGroup(GroupId: number | bigint, Username: string) {
+        this.#database.query(`
                 INSERT INTO UserGroups (Username, GroupId)
                 VALUES (?, ?)
-            `).run(name, GroupId);
-        }
+            `).run(Username, GroupId);
+    }
+    addUserToGroupInvitations(InvitationId: string, Username: string, GroupId: number | bigint, NotificationId: number | bigint) {
+        this.#database.query(`
+                INSERT INTO GroupInvitations (InvitationId, Username, GroupId,NotificationId)
+                VALUES (?, ?, ?, ?)
+            `).run(InvitationId, Username, GroupId, NotificationId);
+
+    }
+    getGroupInfoByInvitationId(InvitationId: string) {
+        console.log("InvitationId", InvitationId);
+        return this.#database.query(`
+            SELECT * FROM GroupInvitations WHERE InvitationId=?;
+            `).all(InvitationId)
+    }
+    deleteInvitationByInvitationId(InvitationId: string) {
+        return this.#database.query(`DELETE FROM GroupInvitations WHERE InvitationId=?;`).run(InvitationId);
+    }
+    addNotifications(Username: string, Title: string, Type: string) {
+        return this.#database.query(`
+                INSERT INTO Notifications (Username, Title, Type)
+                VALUES (?, ?, ?)
+                `).run(Username, Title, Type)
+    }
+    deleteNotificationByNotificationId(NotificationId: string) {
+        return this.#database.query(`DELETE FROM Notifications WHERE NotificationId=?;`).run(NotificationId);
+    }
+    getNotificationsByUsername(Username: string) {
+        return this.#database.query(`SELECT * FROM Notifications WHERE Username=?;`).all(Username);
     }
     addExpense(data: any) {
         const { GroupId, ExpenseTitle, Date, Category, Purpose, Amount, DivisionType } = data
 
-        this.#database.query(`
+        return (this.#database.query(`
             INSERT INTO Expenses (GroupId, ExpenseTitle, Date, Category, Purpose, Amount, DivisionType)
             VALUES (?, ?, ?, ?, ?, ?, ?)
-            `).run(GroupId, ExpenseTitle, Date, Category, Purpose, Amount, DivisionType);
+            `).run(GroupId, ExpenseTitle, Date, Category, Purpose, Amount, DivisionType)).lastInsertRowid;
     }
     addExpenseDivision(ed: any) {
-        console.log(ed);
-        const {ExpenseId, Username, Percentage} = ed
+        // console.log("ghh: ",ed);
+        let { ExpenseId, Username, Percentage } = ed
+        // Percentage = "nj"
+        // console.log("nmm",typeof(Percentage));
 
         // console.log(ExpenseId, Username, Percentage);
-        
+
         this.#database.query(`
             INSERT INTO ExpenseDivisions (ExpenseId, Username, Percentage)
             VALUES (?, ?, ?)

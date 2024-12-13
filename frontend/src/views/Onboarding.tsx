@@ -117,76 +117,81 @@ export default function Onboarding() {
   if (!isAuthenticated) setLocation("/");
 
   return (
-    <div>
+    <div className="overflow-y-scroll mb-2">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input placeholder="shadcn" {...field} />
-                </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Full Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="shadcn" {...field} />
-                </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <form onSubmit={form.handleSubmit(onSubmit)} className="bg-card text-card-foreground  border-black m-4 mt-8 relative space-y-8">
+          <div className="flex flex-col gap-2 group-info bg-secondary p-4 rounded-md">
+            <h1 className="font-semibold text-xl mb-1">Information</h1>
+            <FormField
+              control={form.control}
+              name="avatar"
+              render={({ field }) => (
+                <FormItem>
+                  {/* Display the selected image using the Avatar component */}
+                  {imagePreview && (
+                    <div className="mt-4">
+                      <Avatar>
+                        <AvatarImage src={imagePreview} alt="user avatar" />
+                        <AvatarFallback>UA</AvatarFallback>
+                      </Avatar>
+                    </div>
+                  )}
 
-          <FormField
-            control={form.control}
-            name="avatar"
-            render={({ field }) => (
-              <FormItem>
-                {/* Display the selected image using the Avatar component */}
-                {imagePreview && (
-                  <div className="mt-4">
-                    <Avatar>
-                      <AvatarImage src={imagePreview} alt="user avatar" />
-                      <AvatarFallback>UA</AvatarFallback>
-                    </Avatar>
-                  </div>
-                )}
+                  <FormLabel>Upload Avatar</FormLabel>
+                  <FormControl>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/gif"
+                      onChange={(e) => {
+                        const files = e.target.files;
+                        if (files && files.length > 0) {
+                          handleFileChange(e); // Call the custom handler only if files are selected
+                          field.onChange(files); // Update react-hook-form state with the selected files
+                        }
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-                <FormLabel>Upload Avatar</FormLabel>
-                <FormControl>
-                  <input
-                    type="file"
-                    accept="image/jpeg,image/png,image/gif"
-                    onChange={(e) => {
-                      const files = e.target.files;
-                      if (files && files.length > 0) {
-                        handleFileChange(e); // Call the custom handler only if files are selected
-                        field.onChange(files); // Update react-hook-form state with the selected files
-                      }
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit">Submit</Button>
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="shadcn" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="shadcn" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    This is your public display name.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+
+            <Button type="submit">Submit</Button>
+          </div>
         </form>
       </Form>
     </div>

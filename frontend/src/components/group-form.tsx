@@ -72,7 +72,7 @@ export default function GroupForm() {
     });
     setNewGroupArray((prev: any) => [...prev, values]);
     form.reset();
-    setLocation("/groups")
+    setLocation("/")
   }
 
   return (
@@ -84,7 +84,7 @@ export default function GroupForm() {
             className="bg-card text-card-foreground  border-black m-4 mt-8 relative space-y-8"
           >
             <div className="flex flex-col gap-2 group-info bg-secondary p-4 rounded-md">
-              <h1 className="font-semibold text-xl mb-1 ">Group Information</h1>
+              <h1 className="font-semibold text-xl mb-1">Group Information</h1>
               <FormField
                 control={control}
                 name="groupname"
