@@ -8,10 +8,10 @@ export default function Auth() {
   const { isLoading } = useHandleSignInCallback(() => {
     (async () => {
       const claims = await getIdTokenClaims();
-      const isNew = (
-        await (await fetch(`/api/isnewuser/${claims?.sub}`)).json()
-      ).new;
-      console.log("neww", isNew);
+      const isNew = (await (await fetch(`/api/isnewuser/${claims?.sub}`)).json()).new;
+
+      console.log("isNew:", isNew);
+      console.log("before onboarding:", claims);
 
       if (isNew) {
         setLocation("/onboarding");
