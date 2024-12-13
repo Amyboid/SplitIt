@@ -7,30 +7,25 @@ import { TypographyH3 } from "@/components/ui/typography-h3";
 import { userAtom } from "@/lib/user";
 
 export default function Groups() {
-  const [newGroupArray, setNewGroupArray] = useAtom(newGroupArrayAtom);
   const [user] = useAtom(userAtom);
   const [isGroupExist, setIsGroupExist] = useAtom(isGroupExistAtom);
-
-  useEffect(() => {
-    if (newGroupArray.length == 0) {
-      setIsGroupExist(false);
-    }
-  }, [newGroupArray]);
+  const [newGroupArray, setNewGroupArray] = useAtom(newGroupArrayAtom);
 
   useEffect(() => {
     (async () => {
-      console.log("i was ran")
+      console.log("fetching groups....")
+      console.log("username:", user?.username);
       const data = await (await fetch("/api/groups/" + user?.username)).json()
-      console.log("cvbn: ", data);
-      if (data) {
+      console.log("[api] group data:", data);
+      if (data.length !- 0) {
         setIsGroupExist(true)
         setNewGroupArray([...data])
       }
     })()
-  }, [])
+  }, [user])
 
   useEffect(() => {
-    console.log("njk: ", newGroupArray);
+    console.log("newly added groups: ", newGroupArray);
   }, [newGroupArray])
 
   return (
@@ -68,9 +63,10 @@ function GroupList() {
         Hot Groups
       </h2>
       <div className="p-0 grid grid-cols-2 gap-4 pt-4">
-        {newGroupArray.map((group) => (
+        {newGroupArray.map((group, index) => (
           <GroupCard
             group={group}
+            key={index}
           />
         ))}
       </div>
@@ -81,24 +77,22 @@ function GroupList() {
 
 function GroupCard({ group }: { group: Group }) {
   return (
-    <>
-      <div className="w-full relative h-24 rounded-xl bg-secondary text-div-foreground flex flex-col justify-between p-3 pb-2">
-        <h1 className="text-lg font-medium leading-none tracking-tight">
-          {group.GroupName}
-        </h1>
-        <div className="flex  justify-between">
-          <div className="flex">
-            <Users className="mr-1 w-4 cursor-pointer" />
-            {group.GroupMembers.length}
-          </div>
-          <Link to={`/group/${group.GroupId}/details`}>
-            <div className="flex items-start justify-center gap-1 mt-2">
-              <p className="text-xs font-semibold block leading-3">view</p>
-              <ArrowRight className="size-3 leading-3 font-bold text-chart-4" />
-            </div>
-          </Link>
+    <div className="w-full relative h-24 rounded-xl bg-secondary text-div-foreground flex flex-col justify-between p-3 pb-2">
+      <h1 className="text-lg font-medium leading-none tracking-tight">
+        {group.GroupName}
+      </h1>
+      <div className="flex  justify-between">
+        <div className="flex">
+          <Users className="mr-1 w-4 cursor-pointer" />
+          {group.GroupMembers.length}
         </div>
+        <Link to={`/group/${group.GroupId}/details`}>
+          <div className="flex items-start justify-center gap-1 mt-2">
+            <p className="text-xs font-semibold block leading-3">view</p>
+            <ArrowRight className="size-3 leading-3 font-bold text-chart-4" />
+          </div>
+        </Link>
       </div>
-    </>
+    </div>
   );
 }
