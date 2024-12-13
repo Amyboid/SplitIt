@@ -11,8 +11,8 @@ export default function Auth() {
       const isNew = (
         await (await fetch(`/api/isnewuser/${claims?.sub}`)).json()
       ).new;
-      console.log("neww",isNew);
-      
+      console.log("neww", isNew);
+
       if (isNew) {
         setLocation("/onboarding");
       } else {
@@ -24,7 +24,10 @@ export default function Auth() {
   if (isLoading) {
     return (
       <div className="h-screen w-full grid place-items-center">
-        Redirecting...
+        <div className="grid place-items-center">
+          <div className="loader"></div>
+          Setting things up...
+        </div>
       </div>
     );
   }

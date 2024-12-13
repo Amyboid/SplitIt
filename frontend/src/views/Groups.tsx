@@ -10,13 +10,16 @@ export default function Groups() {
   const [newGroupArray, setNewGroupArray] = useAtom(newGroupArrayAtom);
   const [user] = useAtom(userAtom);
   const [isGroupExist, setIsGroupExist] = useAtom(isGroupExistAtom);
+
   useEffect(() => {
     if (newGroupArray.length == 0) {
       setIsGroupExist(false);
     }
   }, [newGroupArray]);
+
   useEffect(() => {
     (async () => {
+      console.log("i was ran")
       const data = await (await fetch("/api/groups/" + user?.username)).json()
       console.log("cvbn: ", data);
       if (data) {
@@ -28,8 +31,8 @@ export default function Groups() {
 
   useEffect(() => {
     console.log("njk: ", newGroupArray);
-
   }, [newGroupArray])
+
   return (
     <>
       <div className="flex items-center justify-between mt-4 mx-4 z-10 relative">

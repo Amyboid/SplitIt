@@ -317,7 +317,7 @@ export default function ExpenseInput() {
             ))}
           </ToggleGroup>
 
-          <Button type="submit" className="mb-20">Split Expense</Button>
+          <Button type="submit" className="mb-20" onClick={() => history.back()}>Split Expense</Button>
         </form>
       </Form>
 
