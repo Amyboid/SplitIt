@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { fetchAccessToken, fillUserData, getUsers } from "./lib/logto";
+import { fillUserData, getUsers } from "./lib/logto";
 import { db } from "./lib/database";
 import { logger } from "hono/logger";
 import { serveStatic } from "hono/bun";
@@ -163,6 +163,7 @@ app.get("/invitation/reject/:invitationId", async (c) => {
   db.deleteNotificationByNotificationId(NotificationId)
   return c.text("ok")
 })
+
 app.get("/notifications/:username", async (c) => {
   const { username } = c.req.param();
   console.log(username);
@@ -170,6 +171,19 @@ app.get("/notifications/:username", async (c) => {
   console.log(db.getNotificationsByUsername(username));
   return c.json(db.getNotificationsByUsername(username))
 })
+
+app.get("/expenses/:groupid/:userid", async (c) => {
+  const { groupid, userid } = c.req.param();
+  console.log(groupid, userid);
+
+  const userDebt = db.getExpenseByUserId(userid).reduce((accumulator: number, [amount, percentage]: any) => {
+    accumulator += (percentage / 100) * amount; // Contribution of percentage
+    return accumulator; // Return the accumulator for the next iteration
+  }, 0);
+
+  return c.json({userDebt, expenses: db.getExpenseByGroupId(groupid)})
+})
+
 
 app.get(
   '/avatars/*',
