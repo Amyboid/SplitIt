@@ -86,6 +86,7 @@ export default function Onboarding() {
     formData.append('userid', user?.sub!);
     formData.append('username', values.username);
     formData.append('name', values.name);
+
     // Append the avatar file to the FormData
     if (values.avatar && values.avatar.length > 0) {
       formData.append('avatar', values.avatar[0]); // Append the first file

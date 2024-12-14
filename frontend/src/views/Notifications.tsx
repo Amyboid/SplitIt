@@ -11,7 +11,7 @@ import { Link, useLocation } from "wouter";
 export default function Notifications() {
   const { isAuthenticated } = useLogto();
   const [notifications, setNotifications] = useState([]);
-  const [user, setUser] = useAtom(userAtom)
+  const [user] = useAtom(userAtom)
   const [, setLocation] = useLocation();
   useEffect(() => {
     fetch(`/api/notifications/${user?.username}`)

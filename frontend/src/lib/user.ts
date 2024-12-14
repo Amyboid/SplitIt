@@ -1,4 +1,4 @@
-import { IdTokenClaims } from "@logto/react";
-import { atom } from "jotai";
+import { type IdTokenClaims } from "@logto/react";
+import { atomWithStorage } from "jotai/utils";
 
-export const userAtom = atom<IdTokenClaims>();
+export const userAtom = atomWithStorage<IdTokenClaims | undefined>('user-obj', undefined, undefined, { getOnInit: true });

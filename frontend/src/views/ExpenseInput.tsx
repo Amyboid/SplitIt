@@ -48,7 +48,6 @@ export default function ExpenseInput() {
 
   const GroupId: string = useParams().id!;
 
-
   const handleSplitTypeChange = (value: any) => {
     setSplitType(value);
   };
@@ -97,6 +96,7 @@ export default function ExpenseInput() {
 
 
     // Calculate split amounts based on the selected type
+    // @ts-ignore
     const splitAmounts = memberAmounts.map((amount) => {
       if (splitType === "percentage") {
         return (parseFloat(amount) / 100) * parseFloat(values.amount);
@@ -317,7 +317,7 @@ export default function ExpenseInput() {
             ))}
           </ToggleGroup>
 
-          <Button type="submit" className="mb-20">Split Expense</Button>
+          <Button type="submit" className="mb-20" onClick={() => history.back()}>Split Expense</Button>
         </form>
       </Form>
 

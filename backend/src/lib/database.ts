@@ -94,6 +94,14 @@ class DatabaseOrm {
             VALUES (?, ?, ?)
         `).run(ExpenseId, Username, Percentage);
     }
+    getExpenseByGroupId(GroupId: string): any {
+        return this.#database.query(`SELECT * FROM Expenses WHERE GroupId=?;`).all(GroupId);
+    }
+    getExpenseByUserId(Username: string): any {
+        return this.#database.query(`SELECT Amount, Percentage FROM ExpenseDivisions
+            INNER JOIN Expenses ON ExpenseDivisions.ExpenseId = Expenses.ExpenseId
+            WHERE ExpenseDivisions.Username=?;`).values(Username);
+    }
 }
 const db = new DatabaseOrm()
 export { db };
