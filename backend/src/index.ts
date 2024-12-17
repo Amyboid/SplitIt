@@ -67,6 +67,7 @@ app.get("/groups/:username", (c) => {
     ...db.getGroupById(e)[0] as Object,
     GroupMembers: db.getMembersByGroupId(e)
   }))
+  console.log("grrroups from /groups/:username", groups);
 
   return c.json(groups)
 })
@@ -127,17 +128,17 @@ app.post("/groups/:groupid/expense", async (c) => {
 
 app.post("/add/group", async (c) => {
   const data = await c.req.json()
-  console.log(data);
+  console.log("groupData: ----", data);
 
-  const groupId = (db.setNewGroup(data.groupname, data.groupdescription)).lastInsertRowid
+  const groupId = (db.setNewGroup(data.groupname, data.groupdescription, data.creatorname)).lastInsertRowid
 
 
   data.groupmembers.forEach((e: any) => {
-    const hostUser = data.groupmembers.at(-1).name
-    // if (e.name === hostUser) {
-    //   db.addUserToGroup(groupId, e.name)
-    //   return
-    // }
+    const hostUser = data.creatorname
+    if (e.name === hostUser) {
+      db.addUserToGroup(groupId, e.name)
+      return
+    }
     const InvitationId = (Bun.hash(groupId + e.name + Date.now())).toString(16)
     const NotificationId = (db.addNotifications(e.name, hostUser + " invited you to join " + data.groupname + "#" + InvitationId, "invitation")).lastInsertRowid;
 
@@ -153,7 +154,7 @@ app.get("/invitation/accept/:invitationId", async (c) => {
   console.log(db.deleteInvitationByInvitationId(invitationId))
   db.deleteNotificationByNotificationId(NotificationId)
   return c.text("ok")
-  
+
 })
 
 app.get("/invitation/reject/:invitationId", async (c) => {
@@ -164,6 +165,46 @@ app.get("/invitation/reject/:invitationId", async (c) => {
   return c.text("ok")
 })
 
+
+app.post("/update/group/:groupid", async (c) => {
+  const data = await c.req.json()
+  const { groupid } = c.req.param()
+  console.log("data to update :", data.groupmembers, data);
+  console.log("got data ", db.getMembersByGroupId(groupid));
+  const existingMembers = db.getMembersByGroupId(groupid);
+  const hostUser = data.creatorname
+
+  //adding new member
+  data.groupmembers.forEach((e: any) => {
+    if (!existingMembers.includes(e.name)) {
+      const InvitationId = (Bun.hash(groupid + e.name + Date.now())).toString(16)
+      const NotificationId = (db.addNotifications(e.name, hostUser + " invited you to join " + data.groupname + "#" + InvitationId, "invitation")).lastInsertRowid;
+
+      db.addUserToGroupInvitations(InvitationId, e.name, groupid, NotificationId)
+    }
+  })
+
+  // // deleting members 
+  existingMembers.forEach((member: any) => {
+    if (!data.groupmembers.some((element: any) => element.name === member)) {
+      db.addNotifications(member, hostUser + " removed you from " + data.groupname + "#", "Account")
+      db.deleteUserFromGroupByUsername(member)
+    }
+  })
+
+  // update group data
+  db.updateGroupById(data.groupname, data.groupdescription, groupid);
+  return c.text("hp")
+})
+
+app.get("/exit/group/:groupid/:username", async (c) => {
+  const { groupid, username } = c.req.param();
+  console.log("exit stat: ",groupid,username);
+  
+  return c.json("hp")
+})
+
+
 app.get("/notifications/:username", async (c) => {
   const { username } = c.req.param();
   console.log(username);
@@ -172,18 +213,25 @@ app.get("/notifications/:username", async (c) => {
   return c.json(db.getNotificationsByUsername(username))
 })
 
-app.get("/expenses/:groupid/:userid", async (c) => {
-  const { groupid, userid } = c.req.param();
-  console.log(groupid, userid);
+app.get("/expenses/:groupid/:username", async (c) => {
+  const { groupid, username } = c.req.param();
+  console.log(db.getExpenseByUserName(groupid, username));
 
-  const userDebt = db.getExpenseByUserId(userid).reduce((accumulator: number, [amount, percentage]: any) => {
-    accumulator += (percentage / 100) * amount; // Contribution of percentage
-    return accumulator; // Return the accumulator for the next iteration
-  }, 0);
+  const userDebt = db.getExpenseByUserName(groupid, username)
+    .reduce((accumulator: number, [amount, percentage]: any) => {
+      accumulator += (percentage / 100) * amount; // Contribution of percentage
+      return accumulator; // Return the accumulator for the next iteration
+    }, 0);
 
-  return c.json({userDebt, expenses: db.getExpenseByGroupId(groupid)})
+  return c.json({ userDebt, expenses: db.getExpenseByGroupId(groupid) })
 })
 
+
+app.get("/delete/group/:groupid", async (c) => {
+  const { groupid } = c.req.param();
+  console.log(db.deleteGroupRecordsByGroupId(groupid))
+  return c.text("deleted all records successfully")
+})
 
 app.get(
   '/avatars/*',

@@ -70,6 +70,7 @@ const tables = {
             GroupId INTEGER PRIMARY KEY,
             GroupName TEXT NOT NULL,
             Description TEXT,
+            CreatorName TEXT,
             CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
         );
     `,

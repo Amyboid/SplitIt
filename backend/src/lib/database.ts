@@ -24,16 +24,16 @@ class DatabaseOrm {
     getUserById(UserId: string) {
         return this.#database.query(`SELECT * FROM NewUsers WHERE UserId=?;`).values(UserId);
     }
-    setNewGroup(GroupName: string, Description: string) {
+    setNewGroup(GroupName: string, Description: string, CreatorName: string) {
         return this.#database.query(`
-            INSERT INTO Groups (GroupName, Description) 
-            VALUES (?, ?)
-        `).run(GroupName, Description);
+            INSERT INTO Groups (GroupName, Description, CreatorName) 
+            VALUES (?, ?, ?)
+        `).run(GroupName, Description, CreatorName);
     }
     getGroupByUsername(Username: string) {
         return this.#database.query(`SELECT * FROM UserGroups WHERE Username=?;`).values(Username);
     }
-    getMembersByGroupId(GroupId: number | bigint) {
+    getMembersByGroupId(GroupId: number | bigint | string) {
         return this.#database.query(`SELECT Username FROM UserGroups WHERE GroupId=?;`).values(GroupId).flat();
     }
     getGroupById(GroupId: number | bigint) {
@@ -45,7 +45,7 @@ class DatabaseOrm {
                 VALUES (?, ?)
             `).run(Username, GroupId);
     }
-    addUserToGroupInvitations(InvitationId: string, Username: string, GroupId: number | bigint, NotificationId: number | bigint) {
+    addUserToGroupInvitations(InvitationId: string, Username: string, GroupId: number | bigint | string, NotificationId: number | bigint) {
         this.#database.query(`
                 INSERT INTO GroupInvitations (InvitationId, Username, GroupId,NotificationId)
                 VALUES (?, ?, ?, ?)
@@ -57,6 +57,16 @@ class DatabaseOrm {
         return this.#database.query(`
             SELECT * FROM GroupInvitations WHERE InvitationId=?;
             `).all(InvitationId)
+    }
+    updateGroupById(GroupName: string, Description: string, GroupId: number | bigint | string,) {
+        return this.#database.query(`
+        UPDATE Groups SET GroupName=?, Description=? WHERE GroupId=?;
+         `).run(GroupName, Description, GroupId)
+    }
+    deleteUserFromGroupByUsername(Username: string) {
+        return this.#database.query(`
+            DELETE FROM UserGroups WHERE Username=?;
+            `).run(Username)
     }
     deleteInvitationByInvitationId(InvitationId: string) {
         return this.#database.query(`DELETE FROM GroupInvitations WHERE InvitationId=?;`).run(InvitationId);
@@ -97,10 +107,20 @@ class DatabaseOrm {
     getExpenseByGroupId(GroupId: string): any {
         return this.#database.query(`SELECT * FROM Expenses WHERE GroupId=?;`).all(GroupId);
     }
-    getExpenseByUserId(Username: string): any {
+    getExpenseByUserName(GroupId: string, Username: string): any {
         return this.#database.query(`SELECT Amount, Percentage FROM ExpenseDivisions
             INNER JOIN Expenses ON ExpenseDivisions.ExpenseId = Expenses.ExpenseId
-            WHERE ExpenseDivisions.Username=?;`).values(Username);
+            WHERE ExpenseDivisions.Username=? AND Expenses.GroupId=?;`).values(Username, GroupId);
+    }
+    deleteGroupRecordsByGroupId(GroupId: string) {
+        this.#database.query(`DELETE FROM Groups WHERE GroupId=?;`).run(GroupId);
+        this.#database.query(`DELETE FROM UserGroups WHERE GroupId=?;`).run(GroupId);
+        this.#database.query(`DELETE FROM ExpenseDivisions
+                                WHERE ExpenseId IN (
+                                SELECT ExpenseId
+                                FROM Expenses
+                                WHERE GroupId=?);`).run(GroupId);
+        this.#database.query(`DELETE FROM Expenses WHERE GroupId=?;`).run(GroupId);
     }
 }
 const db = new DatabaseOrm()
