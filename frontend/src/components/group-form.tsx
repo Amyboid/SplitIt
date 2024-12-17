@@ -60,7 +60,7 @@ export default function GroupForm() {
     console.log("newly added memberName: ", memberName);
     console.log("fields", fields);
     const exist = fields.some(element => element.name === memberName)
-    exist ? alert('member already exist') : (user?.username === memberName ? alert(`${user.username} is the creator`)
+    exist ? alert('member already exist') : (user?.username === memberName ? alert(`${user.username} is the creator, he is already added`)
       : append({ name: memberName }))
   };
 

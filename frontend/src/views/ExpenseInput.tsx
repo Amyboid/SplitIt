@@ -54,13 +54,17 @@ export default function ExpenseInput() {
   };
 
   const handleAmountChange = (index: any, value: any) => {
-    // console.log("sd", value.length, index);
+    console.log("sd", value.length, index);
 
     const newAmounts = [...memberAmounts];
     newAmounts[index] = value || 0
     setMemberAmounts(newAmounts);
   };
 
+  useEffect(()=>{
+    console.log("memberamount from useEffect: ", memberAmounts);
+    
+  },[memberAmounts])
   const validateAmounts = () => {
     const totalAmount = parseFloat(form.getValues("amount"));
     console.log("memberamount: ", memberAmounts);
@@ -95,7 +99,7 @@ export default function ExpenseInput() {
         if (splitType === "money") {
           return (parseFloat(amount) / parseFloat(values.amount)) * 100;
         } else if (splitType === "fraction") {
-          return (parseFloat(amount) / memberAmounts.reduce((acc, amt) => acc + parseFloat(amt), 0)) * parseFloat(values.amount);
+          return (parseFloat(amount) * 100 / memberAmounts.length);
         }
       });
     }
