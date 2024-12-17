@@ -41,6 +41,7 @@ const expenseSchema = z.object({
 });
 
 export default function ExpenseInput() {
+  const [disable, setDisable] = useState(false)
   const [profiles, setprofiles] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [splitType, setSplitType] = useState("default");
@@ -53,21 +54,27 @@ export default function ExpenseInput() {
   };
 
   const handleAmountChange = (index: any, value: any) => {
+    // console.log("sd", value.length, index);
+
     const newAmounts = [...memberAmounts];
-    newAmounts[index] = value;
+    newAmounts[index] = value || 0
     setMemberAmounts(newAmounts);
   };
 
   const validateAmounts = () => {
     const totalAmount = parseFloat(form.getValues("amount"));
-    if (splitType === "percentage") {
-      const totalPercentage = memberAmounts.reduce((acc, amount) => acc + (parseFloat(amount) || 0), 0);
-      return totalPercentage === 100;
+    console.log("memberamount: ", memberAmounts);
+    // Default case
+    if (splitType === "default") {
+      return true;
+    }
+    else if (splitType === "money") {
+      const totalMoney = memberAmounts.reduce((acc, amount) => acc + (parseFloat(amount) || 0), 0);
+      return totalMoney === totalAmount && (selectedItems.length === memberAmounts.length);
     } else if (splitType === "fraction") {
       const totalFraction = memberAmounts.reduce((acc, amount) => acc + (parseFloat(amount) || 0), 0);
-      return totalFraction > 0 && totalFraction <= totalAmount;
+      return totalFraction === memberAmounts.length && (selectedItems.length === memberAmounts.length);
     }
-    return true; // Default case
   };
 
   const onSubmit = async (values: z.infer<typeof expenseSchema>) => {
@@ -75,45 +82,46 @@ export default function ExpenseInput() {
       console.error("Invalid amounts for the selected split type.");
       return;
     }
+    // Calculate split amounts based on the selected type
+    // @ts-ignore
+    let splitAmounts;
+    if (splitType === "default") {
+      splitAmounts = selectedItems.map((user: any) => { return (100 / selectedItems.length).toFixed(2) })
+      console.log("default: ", splitAmounts);
 
-    console.log("proff",profiles);
-    
-    console.log(await (await fetch(`/api//groups/${GroupId}/expense`, {
+    }
+    else {
+      splitAmounts = memberAmounts.map((amount) => {
+        if (splitType === "money") {
+          return (parseFloat(amount) / parseFloat(values.amount)) * 100;
+        } else if (splitType === "fraction") {
+          return (parseFloat(amount) / memberAmounts.reduce((acc, amt) => acc + parseFloat(amt), 0)) * parseFloat(values.amount);
+        }
+      });
+    }
+
+    console.log("proffff", profiles);
+    console.log("values", values, "splitamount", splitAmounts);
+    const ExpenseDivisions = selectedItems.map((user: any, index) => ({
+      Username: user,
+      Percentage: splitAmounts[index] // Handle case where moneys array is shorter
+    }))
+    console.log("ExpenseDivisions", ExpenseDivisions);
+
+    console.log(await (await fetch(`/api/groups/${GroupId}/expense`, {
       headers: {
         "Content-Type": "application/json",
       },
       method: 'POST',
       body: JSON.stringify({
-        ExpenseTitle: values.title, Date: values.date, Category: values.category, Purpose: values.message, Amount: values.amount, DivisionType: splitType, ExpenseDivisions: profiles.map((user:any, index) => ({
-          Username: user.username,
-          Percentage: memberAmounts[index] !== undefined ? memberAmounts[index] : null // Handle case where percentages array is shorter
+        ExpenseTitle: values.title, Date: values.date, Category: values.category, Purpose: values.message, Amount: values.amount, DivisionType: splitType, ExpenseDivisions: selectedItems.map((user: any, index) => ({
+          Username: user,
+          Percentage: splitAmounts[index] // Handle case where moneys array is shorter
         }))
       })
     })).text());
-
-
-    // console.log(splitType, "fffd", memberAmounts);
-
-
-    // Calculate split amounts based on the selected type
-    // @ts-ignore
-    const splitAmounts = memberAmounts.map((amount) => {
-      if (splitType === "percentage") {
-        return (parseFloat(amount) / 100) * parseFloat(values.amount);
-      } else if (splitType === "fraction") {
-        return (parseFloat(amount) / memberAmounts.reduce((acc, amt) => acc + parseFloat(amt), 0)) * parseFloat(values.amount);
-      }
-      return 0;
-    });
-
-    // console.log("Split amounts:", splitAmounts);
-    // console.log("Submitted values:", {
-    //   ...values, DivisionType: splitType, ExpenseDivisions: profiles.map((username, index) => ({
-    //     Username: username,
-    //     Percentage: memberAmounts[index] !== undefined ? memberAmounts[index] : null // Handle case where percentages array is shorter
-    //   }))
-    // });
-    // Handle form submission logic here
+    // form.reset();
+    // history.back()
   };
 
   const form = useForm<z.infer<typeof expenseSchema>>({
@@ -145,12 +153,18 @@ export default function ExpenseInput() {
     (async () => {
       setprofiles(await (await fetch(`/api/groups/${GroupId}/members`)).json());
     })();
-  }, [selectedItems])
+  }, [])
+  useEffect(() => {
+    splitType === "default" ? setDisable(true) : setDisable(false)
+  }, [splitType])
 
-  // const onSubmit = (values: z.infer<typeof expenseSchema>) => {
-  //   console.log("Submitted values:", values);
-  //   // Handle form submission logic here
-  // };
+  function handleSelectAll() {
+    console.log("not implemented yet");
+
+    // profiles.map((user:any)=>{
+    //   handleToggleChange(user.username)
+    // })
+  }
 
   return (
     <div className="-ml-4 grid w-screen justify-center content-start gap-4 pt-4">
@@ -277,14 +291,14 @@ export default function ExpenseInput() {
             className="flex-col gap-2 bg-secondary w-80 p-4 rounded-md"
           >
             <div className="flex justify-between items-center w-full mb-4">
-              <span>Select all</span>
+              <span onClick={handleSelectAll}>Select all</span>
               <Select onValueChange={handleSplitTypeChange} defaultValue="default">
                 <SelectTrigger className="w-[140px]">
                   <SelectValue placeholder="Split Type" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="default">Default</SelectItem>
-                  <SelectItem value="percentage">By percentage</SelectItem>
+                  <SelectItem value="money">By money</SelectItem>
                   <SelectItem value="fraction">By fraction</SelectItem>
                 </SelectContent>
               </Select>
@@ -307,20 +321,24 @@ export default function ExpenseInput() {
                 </Label>
                 <Input
                   type="number"
+                  step="0.01"
+                  min="0"
                   id={`member-${key}`}
                   className="w-16 no-spinner ml-auto"
                   placeholder=""
                   value={memberAmounts[key]}
                   onChange={(e) => handleAmountChange(key, e.target.value)}
+                  disabled={disable}
                 />
               </div>
             ))}
           </ToggleGroup>
 
-          <Button type="submit" className="mb-20" onClick={() => history.back()}>Split Expense</Button>
+          <Button type="submit" className="mb-20">Split Expense</Button>
         </form>
       </Form>
 
     </div>
   )
 }
+// onClick={() => history.back()}

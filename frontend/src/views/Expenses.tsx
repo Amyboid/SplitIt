@@ -34,6 +34,8 @@ export default function Expenses() {
         return res.json();
       })
       .then(data => {
+        console.log("exp data", data);
+
         setExpenses(data.expenses);
         setDebt(data.userDebt);
         console.log("[api] expenses:", data);

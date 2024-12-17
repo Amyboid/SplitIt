@@ -17,7 +17,7 @@ export default function Groups() {
       console.log("username:", user?.username);
       const data = await (await fetch("/api/groups/" + user?.username)).json()
       console.log("[api] group data:", data);
-      if (data.length !- 0) {
+      if (data.length != 0) {
         setIsGroupExist(true)
         setNewGroupArray([...data])
       }

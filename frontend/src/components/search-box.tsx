@@ -94,23 +94,6 @@ function SearchBar({
   setOpen,
   setFilteredUser,
 }: SearchBarProps) {
-  const emoji = [
-    "😍",
-    "😊",
-    "🤺",
-    "👾",
-    "🤖",
-    "👩",
-    "😒",
-    "😎",
-    "🫡",
-    "🥸",
-    "🤡",
-    "💀",
-    "👽",
-    "👻",
-  ];
-
   function handleClose(name: string) {
     setOpen(false);
     setInputValue("");

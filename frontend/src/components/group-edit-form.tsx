@@ -16,9 +16,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { SearchBox } from "@/components/search-box";
 import { Trash2 } from "lucide-react";
 import { useAtom } from "jotai";
-import { newGroupArrayAtom } from "@/lib/states";
+import { currentGroupAtom, newGroupArrayAtom } from "@/lib/states";
 import { Link, useLocation } from "wouter";
 import { userAtom } from "@/lib/user";
+import { useEffect } from "react";
 
 const userObj = z.object({
   name: z.string(),
@@ -37,24 +38,34 @@ const formSchema = z.object({
   groupmembers: z.array(userObj),
 });
 
-export default function GroupForm() {
+export default function GroupEditForm() {
+  const [currentGroup,] = useAtom(currentGroupAtom);
   const [, setLocation] = useLocation();
   const [, setNewGroupArray] = useAtom(newGroupArrayAtom);
   const [user] = useAtom(userAtom);
+  const GroupId = currentGroup?.GroupId
+  const member = currentGroup?.GroupMembers.filter(i => i !== currentGroup.CreatorName).map(i => ({ name: i }))
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      groupname: "",
-      groupdescription: "",
-      groupmembers: [],
+      groupname: currentGroup?.GroupName,
+      groupdescription: currentGroup?.Description,
+      groupmembers: member,
     },
   });
+
+
 
   const { control, handleSubmit } = form;
   const { fields, append, remove } = useFieldArray({
     control,
     name: "groupmembers",
   });
+
+  useEffect(() => {
+    console.log("current G", currentGroup, user?.username);
+  }, [currentGroup])
 
   const handleAddMember = (memberName: string) => {
     console.log("newly added memberName: ", memberName);
@@ -67,22 +78,19 @@ export default function GroupForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     values.groupmembers = [...values.groupmembers, { name: user?.username as string }]
     const newValues = { ...values, creatorname: user?.username }
-    console.log("new", newValues);
-
-    await fetch('/api/add/group', {
+    console.log("values", values, GroupId);
+    await fetch(`/api/update/group/${GroupId}`, {
       headers: {
         "Content-Type": "application/json",
       },
       method: 'POST',
       body: JSON.stringify(newValues)
     });
-    setNewGroupArray((prev: any) => [...prev, values]);
-    // form.reset();
-    // setLocation("/")
+
   }
 
   return (
-    <>
+    currentGroup && <>
       <div className="overflow-y-scroll mb-2">
         <Form {...form}>
           <form
@@ -125,7 +133,7 @@ export default function GroupForm() {
             {/* members section */}
             <div className="flex flex-col gap-2 bg-secondary p-4 rounded-md">
               <h1 className="font-semibold text-xl mb-1 ">Group Members</h1>
-              <div className="">
+              <div>
                 {fields.map((member, index) => (
                   <div
                     key={member.id}
@@ -152,12 +160,10 @@ export default function GroupForm() {
                 )}
               />
             </div>
-            <Button type="submit">Create</Button>
-            <Link to="/groups">
-              <Button type="button" variant="outline" className="ml-4">
-                Back
-              </Button>
-            </Link>
+            <Button type="submit">Update</Button>
+            <Button type="button" variant="outline" className="ml-4" onClick={() => { form.reset() }}>
+              Reset
+            </Button>
           </form>
         </Form>
       </div>

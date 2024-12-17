@@ -6,23 +6,24 @@ import {
 } from "lucide-react";
 import { Link, useLocation, useParams } from "wouter";
 import { TypographyH3 } from "./ui/typography-h3";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAtom } from "jotai";
-import { Group, newGroupArrayAtom } from "@/lib/states";
+import { currentGroupAtom, newGroupArrayAtom } from "@/lib/states";
 
 export default function GroupDetails() {
-  const [group,setGroup] = useState<Group>()
+  const [currentGroup, setGurrentGroup] = useAtom(currentGroupAtom)
   const [, setLocation] = useLocation();
   const [newGroupArray] = useAtom(newGroupArrayAtom);
 
 
   const GroupId: string = useParams().id!;
-  useEffect(() => {
+  useEffect(() => { 
     const data = (newGroupArray.filter(e => e.GroupId.toString() === GroupId))[0]
     if (data) {
       const members = data.GroupMembers;
-      console.log(members);
-      setGroup(data)
+      console.log("groupData: ", data);
+      console.log("groupmembers: ", members);
+      setGurrentGroup(data)
       // setgroupMembers(members)
     }
     else {
@@ -37,20 +38,13 @@ export default function GroupDetails() {
         <div className="h-[30%] mt-4 mx-4 flex items-start justify-between z-10 ">
           <span className=" mt-[.37rem] mr-auto"><Link to="/groups"><ChevronLeft /></Link></span>
           <TypographyH3 className="-ml-6 mr-auto">
-            {group?.GroupName}
+            {currentGroup?.GroupName}
           </TypographyH3>
         </div>
         <div className="bg-[url('/groupbg3.jpg')] w-full h-[30%] -z-10 absolute left-0 top-0 bg-cover bg-no-repeat">
           <div className="w-full h-full absolute bg-gradient-to-b from-transparent via-transparent to-primary-foreground"></div>
-          {/* <div className="w-full h-full absolute -left-4 bg-gradient-to-l from-transparent via-transparent to-[#ffffff6a]"></div>
-            <div className="w-full h-full absolute -left-4 bg-gradient-to-r from-transparent via-transparent to-[#ffffff6a]"></div> */}
         </div>
-        {/* <div className="h-[25%] p-4 flex items-start justify-between bg-[url('/groupbg3.jpg')] bg-center bg-cover bg-no-repeat">
-          <h1 className="text-2xl font-semibold text-black">{groupname}</h1>
-          <Link to="/groups">
-            <ChevronLeft className="p-2 size-9 cursor-pointer text-black" />
-          </Link>
-        </div> */}
+
         <div className="p-4 ml-auto mr-auto w-full h-[70%] relative flex flex-col gap-4 overflow-scroll">
           <div id="options" className="flex flex-col gap-2">
             <h2 className="text-muted-foreground font-semibold text-base">
@@ -75,7 +69,7 @@ export default function GroupDetails() {
             </h2>
             <div className="rounded-lg border border-chart-3 p-6">
               <div className="gap-2 flex flex-col items-center justify-center">
-                {group?.GroupMembers && group.GroupMembers.map((name: string, index) => {
+                {currentGroup?.GroupMembers && currentGroup.GroupMembers.map((name: string, index) => {
                   return (
                     <div
                       key={index}
