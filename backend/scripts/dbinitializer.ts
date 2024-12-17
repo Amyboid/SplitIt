@@ -71,7 +71,8 @@ const tables = {
             GroupName TEXT NOT NULL,
             Description TEXT,
             CreatorName TEXT,
-            CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
+            CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (CreatorName) REFERENCES Users(Username)
         );
     `,
     usergroups: `
@@ -113,8 +114,10 @@ const tables = {
             Category TEXT NOT NULL,
             Purpose TEXT,
             Amount REAL NOT NULL,
+            Payer TEXT NOT NULL,
             DivisionType TEXT NOT NULL,
-            FOREIGN KEY (GroupId) REFERENCES Groups(GroupId)
+            FOREIGN KEY (GroupId) REFERENCES Groups(GroupId),
+            FOREIGN KEY (Payer) REFERENCES Users(Username)
         );
     `,
     expensedivisions: `

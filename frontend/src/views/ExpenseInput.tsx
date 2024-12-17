@@ -29,6 +29,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useEffect, useState } from "react";
 import { useParams } from "wouter";
+import { userAtom } from "@/lib/user";
+import { useAtom } from "jotai";
 
 const expenseSchema = z.object({
   title: z.string().min(1, { message: "Title is required." }),
@@ -38,11 +40,13 @@ const expenseSchema = z.object({
   category: z.string().min(1, { message: "Category is required." }),
   amount: z.string().min(0, { message: "Amount must be greater than 0." }),
   message: z.string().optional(),
+  payer: z.string()
 });
 
 export default function ExpenseInput() {
   const [disable, setDisable] = useState(false)
   const [profiles, setprofiles] = useState([]);
+  const [user] = useAtom(userAtom);
   const [selectedItems, setSelectedItems] = useState([]);
   const [splitType, setSplitType] = useState("default");
   const [memberAmounts, setMemberAmounts] = useState(profiles.map(() => ""));
@@ -61,10 +65,10 @@ export default function ExpenseInput() {
     setMemberAmounts(newAmounts);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log("memberamount from useEffect: ", memberAmounts);
-    
-  },[memberAmounts])
+
+  }, [memberAmounts])
   const validateAmounts = () => {
     const totalAmount = parseFloat(form.getValues("amount"));
     console.log("memberamount: ", memberAmounts);
@@ -90,7 +94,7 @@ export default function ExpenseInput() {
     // @ts-ignore
     let splitAmounts;
     if (splitType === "default") {
-      splitAmounts = selectedItems.map((user: any) => { return (100 / selectedItems.length).toFixed(2) })
+      splitAmounts = selectedItems.map(() => { return (100 / selectedItems.length).toFixed(2) })
       console.log("default: ", splitAmounts);
 
     }
@@ -118,7 +122,7 @@ export default function ExpenseInput() {
       },
       method: 'POST',
       body: JSON.stringify({
-        ExpenseTitle: values.title, Date: values.date, Category: values.category, Purpose: values.message, Amount: values.amount, DivisionType: splitType, ExpenseDivisions: selectedItems.map((user: any, index) => ({
+        ExpenseTitle: values.title, Date: values.date, Category: values.category, Purpose: values.message, Amount: values.amount, Payer: values.payer, DivisionType: splitType, ExpenseDivisions: selectedItems.map((user: any, index) => ({
           Username: user,
           Percentage: splitAmounts[index] // Handle case where moneys array is shorter
         }))
@@ -136,6 +140,7 @@ export default function ExpenseInput() {
       category: "",
       amount: "",
       message: "",
+      payer: user?.username || "ee"
     },
   });
   const { control, handleSubmit } = form;
@@ -288,6 +293,33 @@ export default function ExpenseInput() {
               </FormItem>
             )}
           />
+
+
+          <FormField
+            control={control}
+            name="payer"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Payer</FormLabel>
+                <FormControl>
+                  <Select {...field} onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a payer" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {
+                        profiles.map((user: any, key) => 
+                          (<SelectItem value={user.username} key={key}>{user.name}</SelectItem>))
+                      }
+                    </SelectContent>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+
 
           {/* User selection section to select with whom the expense will be split */}
           <ToggleGroup

@@ -215,15 +215,41 @@ app.get("/notifications/:username", async (c) => {
 
 app.get("/expenses/:groupid/:username", async (c) => {
   const { groupid, username } = c.req.param();
-  console.log(db.getExpenseByUserName(groupid, username));
+  console.log(db.getExpenseByGroupIDandUsernameWithPayer(groupid, username));
 
-  const userDebt = db.getExpenseByUserName(groupid, username)
-    .reduce((accumulator: number, [amount, percentage]: any) => {
+  const userDebt = db.getExpenseByGroupIDandUsernameWithPayer(groupid, username)
+    .reduce((accumulator: number, [amount, percentage, payer]: any) => {
+      if (payer == username) return accumulator;
       accumulator += (percentage / 100) * amount; // Contribution of percentage
       return accumulator; // Return the accumulator for the next iteration
     }, 0);
+  const userCred = db.getExpenseByGroupIDandUsernameWithPayer(groupid, username)
+    .reduce((accumulator: number, [amount, percentage, payer]: any) => {
+      if (payer != username) return accumulator;
+      accumulator += ((100 - percentage) / 100) * amount; // Contribution of percentage
+      return accumulator; // Return the accumulator for the next iteration
+    }, 0);
 
-  return c.json({ userDebt, expenses: db.getExpenseByGroupId(groupid) })
+  return c.json({ userDebt, userCred, expenses: db.getExpenseByGroupId(groupid) })
+})
+app.get("/expenses/:username", async (c) => {
+  const { username } = c.req.param();
+  console.log(db.getExpenseByUserName(username));
+
+  const userDebt = db.getExpenseByUserName(username)
+    .reduce((accumulator: number, [amount, percentage, payer]: any) => {
+      if (payer == username) return accumulator;
+      accumulator += (percentage / 100) * amount; // Contribution of percentage
+      return accumulator; // Return the accumulator for the next iteration
+    }, 0);
+  const userCred = db.getExpenseByUserName(username)
+    .reduce((accumulator: number, [amount, percentage, payer]: any) => {
+      if (payer != username) return accumulator;
+      accumulator += ((100 - percentage) / 100) * amount; // Contribution of percentage
+      return accumulator; // Return the accumulator for the next iteration
+    }, 0);
+
+  return c.json({ userDebt, userCred });
 })
 
 
