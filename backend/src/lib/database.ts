@@ -84,12 +84,12 @@ class DatabaseOrm {
         return this.#database.query(`SELECT * FROM Notifications WHERE Username=?;`).all(Username);
     }
     addExpense(data: any) {
-        const { GroupId, ExpenseTitle, Date, Category, Purpose, Amount, DivisionType } = data
+        const { GroupId, ExpenseTitle, Date, Category, Purpose, Amount, Payer, DivisionType } = data
 
         return (this.#database.query(`
-            INSERT INTO Expenses (GroupId, ExpenseTitle, Date, Category, Purpose, Amount, DivisionType)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            `).run(GroupId, ExpenseTitle, Date, Category, Purpose, Amount, DivisionType)).lastInsertRowid;
+            INSERT INTO Expenses (GroupId, ExpenseTitle, Date, Category, Purpose, Amount, Payer, DivisionType)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            `).run(GroupId, ExpenseTitle, Date, Category, Purpose, Amount, Payer, DivisionType)).lastInsertRowid;
     }
     addExpenseDivision(ed: any) {
         // console.log("ghh: ",ed);
@@ -107,10 +107,15 @@ class DatabaseOrm {
     getExpenseByGroupId(GroupId: string): any {
         return this.#database.query(`SELECT * FROM Expenses WHERE GroupId=?;`).all(GroupId);
     }
-    getExpenseByUserName(GroupId: string, Username: string): any {
-        return this.#database.query(`SELECT Amount, Percentage FROM ExpenseDivisions
+    getExpenseByGroupIDandUsernameWithPayer(GroupId: string, Username: string): any {
+        return this.#database.query(`SELECT Amount, Percentage, Payer FROM ExpenseDivisions
             INNER JOIN Expenses ON ExpenseDivisions.ExpenseId = Expenses.ExpenseId
             WHERE ExpenseDivisions.Username=? AND Expenses.GroupId=?;`).values(Username, GroupId);
+    }
+    getExpenseByUserName(Username: string): any {
+        return this.#database.query(`SELECT Amount, Percentage, Payer FROM ExpenseDivisions
+            INNER JOIN Expenses ON ExpenseDivisions.ExpenseId = Expenses.ExpenseId
+            WHERE ExpenseDivisions.Username=?;`).values(Username);
     }
     deleteGroupRecordsByGroupId(GroupId: string) {
         this.#database.query(`DELETE FROM Groups WHERE GroupId=?;`).run(GroupId);

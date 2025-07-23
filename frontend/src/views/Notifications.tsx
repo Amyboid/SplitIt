@@ -13,18 +13,22 @@ export default function Notifications() {
   const [notifications, setNotifications] = useState([]);
   const [user] = useAtom(userAtom)
   const [, setLocation] = useLocation();
-  useEffect(() => {
+  function notificationFetcher() {
     fetch(`/api/notifications/${user?.username}`)
-      .then(res => {
-        return res.json();
-      })
-      .then(data => {
-        setNotifications(data)
-        console.log("sujit: ", data);
-      })
-      .catch(error => {
-        console.error('Error fetching notifications:', error); // Handle any errors
-      });
+    .then(res => {
+      return res.json();
+    })
+    .then(data => {
+      setNotifications(data)
+      console.log("[api] notification: ", data);
+    })
+    .catch(error => {
+      console.error('Error fetching notifications:', error); // Handle any errors
+    });
+  }
+
+  useEffect(() => {
+    notificationFetcher();
   }, [])
 
   // mock data
@@ -51,14 +55,17 @@ export default function Notifications() {
               {n.Title.split("#")[0]}
               {
                 n.Type === "invitation" ?
-                  <>
-                    <Button onClick={() => fetch(`/api/invitation/accept/${n.Title.split("#")[1]}`)}>
+                  <div className="mt-3">
+                    <Button className="w-16 h-8 mr-4" onClick={() => {
+                      fetch(`/api/invitation/accept/${n.Title.split("#")[1]}`);
+                      notificationFetcher()
+                      }}>
                       Accept
                     </Button>
-                    <Button onClick={() => fetch(`/api/invitation/reject/${n.Title.split("#")[1]}`)}>
+                    <Button  className="w-16 h-8" onClick={() => {fetch(`/api/invitation/reject/${n.Title.split("#")[1]}`);notificationFetcher()}}>
                       Reject
                     </Button>
-                  </> : ""
+                  </div> : ""
               }
             </CardContent>
           </Card>

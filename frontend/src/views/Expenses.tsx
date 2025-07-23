@@ -12,7 +12,7 @@ import { ChevronLeft } from "lucide-react";
 
 export default function Expenses() {
   const { isAuthenticated } = useLogto();
-  const [debt, setDebt] = useState()
+  const [debt, setDebt] = useState();
   const [expenses, setExpenses] = useState([{
     "ExpenseId": 1,
     "GroupId": 1,
@@ -38,6 +38,7 @@ export default function Expenses() {
 
         setExpenses(data.expenses);
         setDebt(data.userDebt);
+        setCred(data.userCred);
         console.log("[api] expenses:", data);
       })
       .catch(error => {
@@ -54,11 +55,19 @@ export default function Expenses() {
         Expenses
       </TypographyH3>
     </div>
-    <div className="w-screen">
-      <TypographyH3 className="text-center mt-6 text-red-500">
-        {debt}
-      </TypographyH3>
-      <div className="text-center">total debt</div>
+    <div className="w-screen flex justify-around">
+      <div>
+        <TypographyH3 className="text-center mt-6 text-red-500">
+          {debt}
+        </TypographyH3>
+        <div className="text-center">total debt</div>
+      </div>
+      <div>
+        <TypographyH3 className="text-center mt-6 text-green-500">
+          {cred}
+        </TypographyH3>
+        <div className="text-center">total credit</div>
+      </div>
     </div>
     <div className="grid gap-4 my-8 mx-4">
       {expenses.map((e: any, index) => (

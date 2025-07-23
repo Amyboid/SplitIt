@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLogto } from "@logto/react";
 import WavingHandSvg from "@/assets/waving_hand_color_default.svg";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,24 @@ export default function Dashboard() {
   const { isAuthenticated, fetchUserInfo } = useLogto();
   const [, setLocation] = useLocation();
   const [user, setUser] = useAtom(userAtom);
+  const [debt, setDebt] = useState();
+  const [cred, setCred] = useState();
+
+  useEffect(() => {
+    fetch("/api/expenses/" + user?.username)
+      .then(res => {
+        return res.json();
+      })
+      .then(data => {
+        console.log("[api] expenses:", data);
+        setDebt(data.userDebt);
+        setCred(data.userCred);
+      })
+      .catch(error => {
+        console.error('[api] error fetching expenses:', error);
+      });
+  }, []);
+
 
   useEffect(() => {
     (async () => {
@@ -53,7 +71,7 @@ export default function Dashboard() {
               Notification
             </CardTitle>
           </CardHeader>
-          <CardContent className="pt-0 pb-5 pl-3">
+          <CardContent className="pt-0 pb-5 pl-3 text-muted-foreground">
             Automate your savings! Set aside a small percentage of your income
             each month.
           </CardContent>
@@ -63,13 +81,13 @@ export default function Dashboard() {
         <div className="grid grid-cols-2 gap-4 my-8">
           <Card className="border-red-600">
             <CardHeader>
-              <CardTitle>₹ 500000</CardTitle>
+              <CardTitle>₹ {debt}</CardTitle>
               <CardDescription className="text-red-600">debt</CardDescription>
             </CardHeader>
           </Card>
           <Card className="border-green-600">
             <CardHeader>
-              <CardTitle>₹ 5000</CardTitle>
+              <CardTitle>₹ {cred}</CardTitle>
               <CardDescription className="text-green-600">
                 credit
               </CardDescription>

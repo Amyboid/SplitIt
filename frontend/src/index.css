@@ -28,13 +28,16 @@
 }
 
 .notification-card-background {
-  background-color: #ffffff;
+  background-color: hsl(var(--background));
   opacity: 0.7;
-  background-image: repeating-radial-gradient(circle at 0 0, transparent 0, #ffffff 13px), repeating-linear-gradient(#e8e8e855, #e8e8e8);
+  /* #e8e8e855, #e8e8e8 */
+  background-image: repeating-radial-gradient(circle at 0 0, transparent 0, hsl(var(--background)) 13px),
+  repeating-linear-gradient(var(--n-grad));
 }
 
 @layer base {
   :root {
+    --n-grad: #e8e8e855, #e8e8e8;
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -63,6 +66,7 @@
   }
 
   .dark {
+    --n-grad: #42424255, #242424;
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
@@ -148,5 +152,16 @@
   100% {background-position:0% 0}
 }
 
+#div-after-pattern::before {
+  content: '';
+  display: block;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-image: linear-gradient(to bottom, transparent, hsl(var(--background)));
+  width: 100vw;
+  height: 150px;
+  z-index: 1000;
+}
 
 /* 0, 84.2%, 60.2%, 0.28 */
